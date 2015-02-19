@@ -17,6 +17,21 @@ var serviceSchema = new Schema({
 });
 var Service = mongoose.model('Service', serviceSchema);
 
+var checkSchema = new Schema({
+	name: { type: String, required: true },
+	url: { type: String, required: true },
+	method: { type: String, required: true, default: 'GET' },
+	headers: {},
+	params: {},
+	body: String,
+	successCode: String,
+	errorCode: String,
+	successResponseTime: Number,
+	errorResponseTime: Number,
+	_service: { type: ObjectId, ref: 'Service', required: true }
+});
+mongoose.model('Check', checkSchema);
+
 var eventSchema = new Schema({
 	_service: { type: ObjectId, ref: 'Service', required: true },
 	_status: { type: ObjectId, ref: 'Status', required: true },
@@ -46,4 +61,3 @@ eventSchema.post('save', function timestamp(next) {
 	});
 });
 mongoose.model('Event', eventSchema);
-

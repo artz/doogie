@@ -1,0 +1,54 @@
+<h2>Checks</h2>
+  method: { type: String, required: true, default: 'GET' },
+  headers: {},
+  params: {},
+  body: String,
+  successCode: String,
+  errorCode: String,
+  successResponseTime: Number,
+  errorResponseTime: Number,
+<form class="form-inline" ng-repeat="check in self.checks | orderBy: 'url'">
+  <div class="form-group">
+    <select class="form-control" ng-model="check._service" ng-options="service._id as service.name for service in self.services"></select>
+  </div>
+	<div class="form-group">
+    <input type="text" class="form-control" placeholder="Name" ng-model="check.name">
+  </div>
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="http://www.yourcheck.com" ng-model="check.url">
+  </div>
+  <div class="form-group">
+    <select class="form-control" ng-model="check.method">
+      <option value="GET">GET</option>
+      <option value="POST">POST</option>
+      <option value="PUT">PUT</option>
+      <option value="DELETE">DELETE</option>
+    </select>
+  </div>
+  <div class="form-group">
+	  <button type="submit" class="btn btn-default" ng-click="self.update(check)">Save</button>
+	  <button type="submit" class="btn btn-danger" ng-click="self.delete(check)">Delete</button>
+  </div>
+</form>
+<form class="form-inline">
+  <div class="form-group">
+    <select class="form-control" ng-model="self.check._service" ng-options="service._id as service.name for service in self.services"></select>
+  </div>
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Name" ng-model="self.check.name">
+  </div>
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="http://www.yourcheck.com" ng-model="self.check.url">
+  </div>
+  <div class="form-group">
+    <select class="form-control" ng-model="check.method">
+      <option value="GET">GET</option>
+      <option value="POST">POST</option>
+      <option value="PUT">PUT</option>
+      <option value="DELETE">DELETE</option>
+    </select>
+  </div>
+  <div class="form-group">
+  	<button type="submit" class="btn btn-primary" ng-click="self.create(self.check)">Add</button>
+  </div>
+</form>

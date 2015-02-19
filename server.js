@@ -16,6 +16,8 @@ var meanify = require('meanify')({
 });
 app.use(meanify());
 
+require('./doogie');
+
 var serveStatic = require('serve-static');
 app.use(serveStatic('client/www'));
 

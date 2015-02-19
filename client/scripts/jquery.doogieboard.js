@@ -141,7 +141,6 @@ $.fn.doogieboard = function doogieBoard(options) {
 				$td.addClass('events-open');
 				$activeDay = $td;
 				var $tr = $td.parent();
-				var $events = $td.find('.event');
 				var date = $td.data('date');
 				date = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
 				$activeInfo = $('<tr class="doogieboard-info"><td><span class="date">' + date + '</span></td><td colspan="' + days + '">' + $td.html() + '</td></tr>');
