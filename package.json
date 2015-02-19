@@ -1,7 +1,7 @@
 {
   "name": "doogie",
   "version": "0.1.0",
-  "description": "Doogie Browser, MD: A simple health status service.",
+  "description": "Doogie Browser, M.D.: A simple health status service.",
   "main": "server.js",
   "dependencies": {
     "angular": "^1.3.13",
@@ -10,7 +10,9 @@
     "bootstrap": "^3.3.2",
     "debug": "^2.1.1",
     "express": "^4.11.2",
+    "jquery": "^2.1.3",
     "meanify": "^0.1.6",
+    "moment": "^2.9.0",
     "mongoose": "^3.8.23",
     "morgan": "^1.5.1",
     "serve-static": "^1.9.1"

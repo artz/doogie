@@ -413,3 +413,36 @@
 body {
   padding-top: 50px;
   padding-bottom: 20px; }
+
+.doogieboard-events {
+  cursor: pointer; }
+
+.doogieboard-events > .event {
+  display: none; }
+
+.doogieboard-badge > .event-count {
+  display: none; }
+
+.doogieboard-badge:before {
+  color: #6c995c;
+  content: 'Online'; }
+
+.doogieboard-events.level-0 .doogieboard-badge:before {
+  content: 'Recovered'; }
+
+.doogieboard-events.level-1 .doogieboard-badge:before {
+  color: #cf8c59;
+  content: 'Alert'; }
+
+.doogieboard-events.level-2 .doogieboard-badge:before {
+  color: #b85858;
+  content: 'Offline'; }
+
+.doogieboard-events.events-open {
+  background-color: #ddd; }
+
+.doogieboard-info {
+  background-color: #ddd; }
+
+.doogieboard-info .doogieboard-badge {
+  display: none; }

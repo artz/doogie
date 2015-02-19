@@ -14,6 +14,7 @@ var livereload = require('gulp-livereload');
 var paths = {
 	sass: './client/scss/**/*.scss',
 	libJS: [
+		'./node_modules/jquery/dist/jquery.js',
 		'./node_modules/angular/angular.js',
 		'./node_modules/angular-sanitize/angular-sanitize.js',
 		'./node_modules/angular-resource/angular-resource.js'

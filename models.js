@@ -12,9 +12,10 @@ mongoose.model('Status', statusSchema);
 var serviceSchema = new Schema({
 	name: { type: String, required: true },
 	description: { type: String, required: true },
-	_currentEvent: { type: ObjectId, ref: 'Event' }
+	_lastStatus: { type: ObjectId, ref: 'Status' },
+	_lastEvent: { type: ObjectId, ref: 'Event' }
 });
-mongoose.model('Service', serviceSchema);
+var Service = mongoose.model('Service', serviceSchema);
 
 var eventSchema = new Schema({
 	_service: { type: ObjectId, ref: 'Service', required: true },
@@ -30,6 +31,19 @@ eventSchema.pre('save', function timestamp(next) {
 		this.createdAt = now;
 	}
 	next();
+});
+// Hook to update service's current event.
+eventSchema.post('save', function timestamp(next) {
+	var event = this;
+	Service.findById(event._service, function (err, service) {
+		if (err) {
+			return next(err);
+		}
+		service._lastStatus = event._status;
+		service._lastEvent = event._id;
+		// TODO: Websocket hooks to alert when status changes.
+		service.save();
+	});
 });
 mongoose.model('Event', eventSchema);
 
