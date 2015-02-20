@@ -24,10 +24,10 @@ var checkSchema = new Schema({
 	headers: {},
 	params: {},
 	body: String,
-	successCode: String,
+	successCode: { type: String, default: '^2[0-9][0-9]$' },
 	errorCode: String,
-	successResponseTime: Number,
-	errorResponseTime: Number,
+	successResponseTime: { type: Number, default: 1000 },
+	errorResponseTime: { type: Number, default: 6000 },
 	_service: { type: ObjectId, ref: 'Service', required: true }
 });
 mongoose.model('Check', checkSchema);

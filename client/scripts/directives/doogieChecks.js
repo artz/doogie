@@ -27,7 +27,12 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 			__sort: 'name'
 		});
 
-		self.check = {};
+		self.check = {
+			method: 'GET',
+			successCode: '^2[0-9][0-9]$',
+			successResponseTime: 1000,
+			errorResponseTime: 6000
+		};
 
 		self.create = function (check) {
 			new Check(check).$save().then(function () {

@@ -8,6 +8,16 @@ var defaults = {
 	legend: true
 };
 
+function formatAMPM(date) {
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var ampm = hours >= 12 ? 'pm' : 'am';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	minutes = minutes < 10 ? '0' + minutes : minutes;
+	return hours + ':' + minutes + ampm;
+}
+
 $.fn.doogieboard = function doogieBoard(options) {
 
 	var isTimeago = !!jQuery.timeago;
@@ -26,6 +36,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 		__sort: '-createdAt'
 	});
 	var servicePromise = $.get(options.host + 'services', {
+		__populate: '_lastStatus',
 		__sort: 'name'
 	});
 	var statusPromise = $.get(options.host + 'statuses', {
@@ -72,12 +83,17 @@ $.fn.doogieboard = function doogieBoard(options) {
 				$tr.append('<td class="service-name">' + service.name + '</td>');
 
 				for (var j = 0, k = days; j < k; j += 1) {
-					var $td = $('<td class="daysago-' + j + '"><span class="doogieboard-badge"><b class="event-count">0</b></span></td>');
+					var $td = $('<td class="doogieboard-day daysago-' + j + '"><span class="doogieboard-badge"><b class="event-count"></b></span></td>');
 					$td.data('eventCount', 0);
 					$td.data('date', date);
 					hash[service._id][date.getMonth() + '-' + date.getDate()] = $td;
 					$tr.append($td);
 					date.setDate(date.getDate() - 1);
+
+					// Populate current status on first cell.
+					if (j === 0 && service._lastStatus) {
+						$td.addClass('level-' + service._lastStatus.level);
+					}
 				}
 
 				$tbody.append($tr);
@@ -99,9 +115,9 @@ $.fn.doogieboard = function doogieBoard(options) {
 				$td.data('eventCount', eventCount);
 				$td.find('.event-count').html(eventCount);
 
-				$td.append('<div class="event"><b class="status">' + event._status.name + '</b> <time class="timeago" datetime="' + createdAt.toISOString() + '">' +
+				$td.append('<div class="event"><b class="status">' + event._status.name + '</b> at ' + formatAMPM(createdAt) + ', <time class="timeago" datetime="' + createdAt.toISOString() + '">' +
 					createdAt.getMonth() + '/' + createdAt.getDate() + ' ' + createdAt.getHours() + ':' + createdAt.getMinutes() +
-					'</time><p>' + event.message + '</p></div>');
+					'</time>.<p>' + event.message + '</p></div>');
 			}
 
 			// Update DOM.
@@ -130,7 +146,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 			$elem.on('click', 'td.doogieboard-events', function () {
 				var $td = $(this);
 				if ($activeDay) {
-					$activeDay.removeClass('events-open');
+					$activeDay.removeClass('events-open active');
 					$activeInfo.remove();
 					if ($activeDay[0] === $td[0]) {
 						$activeDay = $activeInfo = undefined;
@@ -138,12 +154,12 @@ $.fn.doogieboard = function doogieBoard(options) {
 					}
 				}
 
-				$td.addClass('events-open');
+				$td.addClass('events-open active');
 				$activeDay = $td;
 				var $tr = $td.parent();
 				var date = $td.data('date');
 				date = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-				$activeInfo = $('<tr class="doogieboard-info"><td><span class="date">' + date + '</span></td><td colspan="' + days + '">' + $td.html() + '</td></tr>');
+				$activeInfo = $('<tr class="doogieboard-info active"><td><span class="date">' + date + '</span></td><td colspan="' + days + '">' + $td.html() + '</td></tr>');
 				$tr.after($activeInfo);
 
 			});

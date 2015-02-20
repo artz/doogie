@@ -40,9 +40,8 @@ angular.module('doogie').directive('doogieEvents', function doogieEvents() {
 			});
 		};
 
-		self.update = function (event, $event) {
+		self.update = function (event) {
 			event.$save().then(refresh);
-			$event.preventDefault();
 		};
 
 		self.delete = function (event) {
