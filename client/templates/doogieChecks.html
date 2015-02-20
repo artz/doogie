@@ -18,15 +18,16 @@
     </select>
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" ng-model="check.successCode">
-    <input type="text" class="form-control" ng-model="check.successResponseTime">
-    <input type="text" class="form-control" ng-model="check.errorResponseTime">
+    <input type="text" class="form-control" ng-model="check.successCode" size="6">
+    <input type="text" class="form-control" ng-model="check.successResponseTime" size="4">
+    <input type="text" class="form-control" ng-model="check.errorResponseTime" size="4">
   </div>
   <div class="form-group">
 	  <button class="btn btn-default" ng-click="self.update(check)">Save</button>
 	  <button class="btn btn-danger" ng-click="self.delete(check)">Delete</button>
   </div>
 </form>
+
 <form class="form-inline">
   <div class="form-group">
     <select class="form-control" ng-model="self.check._service" ng-options="service._id as service.name for service in self.services"></select>
@@ -46,9 +47,9 @@
     </select>
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" ng-model="self.check.successCode">
-    <input type="text" class="form-control" ng-model="self.check.successResponseTime">
-    <input type="text" class="form-control" ng-model="self.check.errorResponseTime">
+    <input type="text" class="form-control" ng-model="self.check.successCode" size="6">
+    <input type="text" class="form-control" ng-model="self.check.successResponseTime" size="4">
+    <input type="text" class="form-control" ng-model="self.check.errorResponseTime" size="4">
   </div>
   <div class="form-group">
   	<button class="btn btn-primary" ng-click="self.create(self.check)">Add</button>

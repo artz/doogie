@@ -12,7 +12,11 @@ angular.module('doogie').directive('doogieBoard', function doogieEvents($timeout
 	return directive;
 
 	function link(scope, $elem, attrs) {
-		$elem.doogieboard();
+
+		var legend = attrs.legend !== 'false';
+		$elem.doogieboard({
+			legend: legend
+		});
 	}
 
 });

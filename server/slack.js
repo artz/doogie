@@ -34,6 +34,7 @@ module.exports = {
 	},
 
 	alert: function slackAlert(info) {
+		return;
 		// POST to Slack webhook API.
 		if (info.alertType !== 'success') {
 			var payload = {

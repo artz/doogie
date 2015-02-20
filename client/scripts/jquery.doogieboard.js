@@ -49,11 +49,12 @@ $.fn.doogieboard = function doogieBoard(options) {
 
 		var $elem = $(elem).addClass('doogieboard');
 		var $table = $('<table class="table"></table>');
-		var $thead = $('<thead><tr></tr></thead>');
+		var $thead = $('<thead></thead>');
+		var $tr = $('<tr></tr>');
 		var $tbody = $('<tbody></tbody>');
 
 		// Render table header.
-		$thead.append('<th>Service</th>');
+		$tr.append('<th>Service</th>');
 		for (var i = 0, l = days; i < l; i += 1) {
 			var text;
 			if (i === 0) {
@@ -63,8 +64,9 @@ $.fn.doogieboard = function doogieBoard(options) {
 			} else {
 				text = i + ' days ago';
 			}
-			$thead.append('<th>' + text + '</th>');
+			$tr.append('<th>' + text + '</th>');
 		}
+		$thead.append($tr);
 
 		// Render data table.
 		$.when(eventPromise, servicePromise, statusPromise).done(function (events, services, statuses) {
@@ -116,9 +118,10 @@ $.fn.doogieboard = function doogieBoard(options) {
 				$td.data('eventCount', eventCount);
 				$td.find('.event-count').html(eventCount);
 
-				$td.append('<div class="event"><b class="status">' + event._status.name + '</b> at ' + formatAMPM(createdAt) + ', <time class="timeago" datetime="' + createdAt.toISOString() + '">' +
+				$td.append('<div class="event level-' + event._status.level + '"><h5><b class="status">' + event._status.name +
+					'</b> <small>at ' + formatAMPM(createdAt) + ', <time class="timeago" datetime="' + createdAt.toISOString() + '">' +
 					createdAt.getMonth() + '/' + createdAt.getDate() + ' ' + createdAt.getHours() + ':' + createdAt.getMinutes() +
-					'</time>.<p>' + event.message + '</p></div>');
+					'</time></small></h5><p class="message">' + event.message + '</p></div>');
 			}
 
 			// Update DOM.

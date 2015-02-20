@@ -11,16 +11,29 @@
 	<link rel="stylesheet" href="css/doogie.css">
 </head>
 
-<body ng-app="doogie">
+<body ng-app="doogie" class="container">
 
-	<h1>Doogie Browser, M.D.</h1>
+	<nav class="navbar navbar-default navbar-fixed-top" ng-controller="navController as nav">
+		<div class="container">
+			<div class="navbar-header">
+	      <a class="navbar-brand" href="#/">
+	        Doogie
+	        <!--<img alt="Brand" src="...">-->
+	      </a>
+	    </div>
+		  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+		    <!-- <ul class="nav navbar-nav">
+		      <li ng-class="{ active: nav.isActive('/') }"><a href="#/">Dashboard</a></li>
+		    </ul> -->
+		    <doogie-bar></doogie-bar>
+		  	<ul class="nav navbar-nav navbar-right">
+		      <li ng-class="{ active: nav.isActive('/admin') }"><a href="#/admin">Admin</a></li>
+		    </ul>
+	    </div>
+	  </div>
+	</nav>
 
-	<doogie-board></doogie-board>
-
-	<doogie-events></doogie-events>
-	<doogie-checks></doogie-checks>
-	<doogie-services></doogie-services>
-	<doogie-statuses></doogie-statuses>
+	<ng-view></ng-view>
 
 	<script src="js/lib.min.js"></script>
 	<script src="js/doogie.js"></script>

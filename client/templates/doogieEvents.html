@@ -7,7 +7,7 @@
     <select class="form-control" ng-model="self.event._status" ng-options="status._id as status.name for status in self.statuses"></select>
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" placeholder="Message" ng-model="self.event.message">
+    <input type="text" class="form-control" placeholder="Message" ng-model="self.event.message" size="60">
   </div>
   <div class="form-group">
   	<button type="submit" class="btn btn-primary" ng-click="self.create(self.event)">Send</button>
@@ -21,7 +21,7 @@
     <select class="form-control" ng-model="event._status" ng-options="status._id as status.name for status in self.statuses"></select>
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" placeholder="Message" ng-model="event.message">
+    <input type="text" class="form-control" placeholder="Message" ng-model="event.message" size="60">
   </div>
   <div class="form-group">
 	  <button type="submit" class="btn btn-default" ng-click="self.update(event)">Save</button>
