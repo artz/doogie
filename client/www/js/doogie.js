@@ -96,6 +96,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 					date.setDate(date.getDate() - 1);
 
 					// Populate current status on first cell.
+					// Note: This fails to carry unchanged status through to yesterday.
 					if (j === 0 && service._lastStatus) {
 						$td.addClass('level-' + service._lastStatus.level);
 					}

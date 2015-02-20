@@ -1,9 +1,13 @@
-var express = require('express');
-var morgan = require('morgan');
+/* jshint node: true */
 var debug = require('debug')('doogie');
-
+var express = require('express');
 var app = express();
+
+var morgan = require('morgan');
 app.use(morgan('dev')); // Use `combined` for production.
+
+var compression = require('compression');
+app.use(compression());
 
 require('./models');
 var mongoose = require('mongoose');

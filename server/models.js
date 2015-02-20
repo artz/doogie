@@ -1,13 +1,14 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
+var slack = require('./slack');
 
 var statusSchema = new Schema({
 	name: { type: String, required: true },
 	level: { type: Number, default: 0 },
 	description: { type: String, required: true }
 });
-mongoose.model('Status', statusSchema);
+var Status = mongoose.model('Status', statusSchema);
 
 var serviceSchema = new Schema({
 	name: { type: String, required: true },
@@ -58,6 +59,15 @@ eventSchema.post('save', function timestamp(next) {
 		service._lastEvent = event._id;
 		// TODO: Websocket hooks to alert when status changes.
 		service.save();
+
+		// Notify Slack channel of current status.
+		Status.findById(event._status, function (err, status) {
+			event.service = service;
+			event.status = status;
+			slack.event(event);
+		});
+
 	});
+
 });
 mongoose.model('Event', eventSchema);

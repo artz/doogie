@@ -17,7 +17,7 @@ function runChecks() {
 		.exec(function (err, checks) {
 		checks.forEach(function (check) {
 			debug('Checking ' + check.url + '...');
-			var info = {
+			var alert = {
 				check: check,
 				service: check._service,
 				url: check.url,
@@ -27,19 +27,19 @@ function runChecks() {
 				url: check.url,
 				timeout: 10000, // 10 second timeout
 			}, function (err, response, body) {
-				info.response = response;
-				info.body = body;
-				info.responseEnd = new Date();
-				info.responseTime = info.responseEnd - info.responseStart;
-				handleResults(err, info);
+				alert.response = response;
+				alert.body = body;
+				alert.responseEnd = new Date();
+				alert.responseTime = alert.responseEnd - alert.responseStart;
+				handleResults(err, alert);
 			});
 		});
 	});
 }
 
-function handleResults(err, info) {
+function handleResults(err, alert) {
 
-	var check = info.check;
+	var check = alert.check;
 
 	var successCodeRegExp = check.successCode ? new RegExp(check.successCode) : new RegExp('^2[0-9][0-9]$');
 	var errorCodeRegExp = check.errorCode ? new RegExp(check.errorCode) : undefined;
@@ -50,41 +50,41 @@ function handleResults(err, info) {
 	var text = '';
 
 	// Response time check.
-	var responseTime = info.responseTime;
+	var responseTime = alert.responseTime;
 	var responseTimeStatus = 'normal';
 	if (responseTime > successResponseTime && responseTime < errorResponseTime) {
 		alertType = 'warning';
-		text += ' Elevated (+' + successResponseTime + 'ms) response time of ' + info.responseTime + 'ms: ' + info.check.url;
+		text += ' Elevated (+' + successResponseTime + 'ms) response time of ' + alert.responseTime + 'ms: ' + alert.check.url;
 		responseTimeStatus = 'elevated';
 	} else if (responseTime >= errorResponseTime) {
 		alertType = 'error';
-		text += ' High (+ ' + errorResponseTime + 'ms) response time of ' + info.responseTime + 'ms: ' + info.check.url;
+		text += ' High (+ ' + errorResponseTime + 'ms) response time of ' + alert.responseTime + 'ms: ' + alert.check.url;
 		responseTimeStatus = 'high';
 	}
 
 	// Status code check.
-	var response = info.response;
+	var response = alert.response;
 	var statusCode;
 	if (err) {
 		statusCode = '0';
 		alertType = 'error';
-		text += 'No response from server: ' + info.check.url;
+		text += 'No response from server: ' + alert.check.url;
 	} else {
 		statusCode = response.statusCode.toString();
 		if (successCodeRegExp && !successCodeRegExp.test(statusCode)) {
 			alertType = 'error';
-			text += ' Unexpected response status code of ' + statusCode + ': ' + info.check.url;
+			text += ' Unexpected response status code of ' + statusCode + ': ' + alert.check.url;
 		} else if (errorCodeRegExp && errorCodeRegExp.test(statusCode)) {
 			alertType = 'error';
-			text += ' Unexpected response status code of ' + statusCode + ': ' + info.check.url;
+			text += ' Unexpected response status code of ' + statusCode + ': ' + alert.check.url;
 		}
 	}
 
-	info.text = text;
-	info.alertType = alertType;
-	info.statusCode = statusCode;
-	info.responseTimeStatus = responseTimeStatus;
+	alert.text = text;
+	alert.alertType = alertType;
+	alert.statusCode = statusCode;
+	alert.responseTimeStatus = responseTimeStatus;
 
-	datadog(err, info);
-	slack(err, info);
+	datadog(alert);
+	slack.alert(alert);
 }
