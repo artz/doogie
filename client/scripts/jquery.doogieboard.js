@@ -4,7 +4,7 @@
 
 var defaults = {
 	days: 5,
-	host: 'http://localhost:3001/api/',
+	host: '/api/',
 	legend: true
 };
 

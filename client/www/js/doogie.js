@@ -22,7 +22,7 @@ angular.module('doogie', [
 
 var defaults = {
 	days: 5,
-	host: 'http://localhost:3001/api/',
+	host: '/api/',
 	legend: true
 };
 
@@ -415,12 +415,6 @@ $.fn.doogieboard = function doogieBoard(options) {
   document.createElement("time");
 }));
 
-angular.module('doogie').controller('navController', ['$location', function ($location) {
-	this.isActive = function (viewLocation) {
-		return viewLocation === $location.path();
-	};
-}]);
-
 /* doogieEvents.js */
 
 /**
@@ -703,6 +697,12 @@ angular.module('doogie').directive('doogieStatuses', function doogieStatuses() {
 	}
 
 });
+
+angular.module('doogie').controller('navController', ['$location', function ($location) {
+	this.isActive = function (viewLocation) {
+		return viewLocation === $location.path();
+	};
+}]);
 
 angular.module('doogie')
 

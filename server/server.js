@@ -25,5 +25,5 @@ require('./doogie');
 var serveStatic = require('serve-static');
 app.use(serveStatic('client/www'));
 
-app.listen(3001);
-debug('Doogie server running on port 3001.');
+app.listen(8081);
+debug('Doogie server running on port 8081.');
