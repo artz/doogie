@@ -11,7 +11,8 @@ app.use(compression());
 
 require('./models');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/doogie');
+mongoose.connect('mongodb://ec2-52-0-24-9.compute-1.amazonaws.com/doogie');
+// mongoose.connect('mongodb://localhost/doogie');
 
 var meanify = require('meanify')({
 	path: '/api',
