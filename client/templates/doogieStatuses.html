@@ -5,7 +5,7 @@
     <input type="text" class="form-control" placeholder="Name" ng-model="self.status.name">
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" placeholder="Description" ng-model="self.status.description" size="50">
+    <input type="text" class="form-control" placeholder="Description" ng-model="self.status.description" size="52">
   </div>
   <div class="form-group">
     <input type="text" class="form-control" placeholder="0" ng-model="self.status.level" size="2">
@@ -15,12 +15,12 @@
   </div>
 </form>
 
-<form class="form-inline" ng-repeat="status in self.statuses | orderBy : 'level'">
+<form class="form-inline" ng-repeat="status in self.statuses">
 	<div class="form-group">
     <input type="text" class="form-control" placeholder="Name" ng-model="status.name">
   </div>
   <div class="form-group">
-    <input type="text" class="form-control" placeholder="Description" ng-model="status.description" size="50">
+    <input type="text" class="form-control" placeholder="Description" ng-model="status.description" size="52">
   </div>
   <div class="form-group">
     <input type="text" class="form-control" placeholder="0" ng-model="status.level" size="2">

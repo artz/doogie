@@ -1,19 +1,23 @@
 /* jshint node: true */
 var debug = require('debug')('doogie');
+
 var express = require('express');
 var app = express();
-
-var morgan = require('morgan');
-app.use(morgan('dev')); // Use `combined` for production.
 
 var compression = require('compression');
 app.use(compression());
 
-require('./models');
+var morgan = require('morgan');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://ec2-52-0-24-9.compute-1.amazonaws.com/doogie');
-// mongoose.connect('mongodb://localhost/doogie');
+if (app.get('env') === 'development') {
+	app.use(morgan('dev'));
+	mongoose.connect('mongodb://localhost/doogie');
+} else {
+	app.use(morgan('combined'));
+	mongoose.connect('mongodb://ec2-52-0-24-9.compute-1.amazonaws.com/doogie');
+}
 
+require('./models');
 var meanify = require('meanify')({
 	path: '/api',
 	pluralize: true,

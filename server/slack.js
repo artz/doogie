@@ -4,14 +4,6 @@
 var debug = require('debug')('doogie');
 var request = require('request');
 var SLACK_API = 'https://hooks.slack.com/services/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';
-/*
-{
-	"channel": "#general",
-	"username": "webhookbot",
-	"text": "This is posted to #general and comes from a bot named webhookbot.",
-	"icon_emoji": ":ghost:"
-}
-*/
 
 module.exports = {
 
@@ -20,7 +12,7 @@ module.exports = {
 		var status = event.status;
 		var payload = {
 			channel: '#amp-success',
-			text: '(Testing) [' + service.name + ' ' + status.name + '] ' + event.message
+			text: '[' + service.name + ' ' + status.name + '] ' + event.message
 		};
 
 		// debug('Slack Request', payload);
@@ -34,7 +26,6 @@ module.exports = {
 	},
 
 	alert: function slackAlert(info) {
-		return;
 		// POST to Slack webhook API.
 		if (info.alertType !== 'success') {
 			var payload = {

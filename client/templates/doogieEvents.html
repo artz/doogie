@@ -1,4 +1,5 @@
 <h2>Events</h2>
+
 <form class="form-inline">
   <div class="form-group">
     <select class="form-control" ng-model="self.event._service" ng-options="service._id as service.name for service in self.services"></select>
@@ -13,7 +14,7 @@
   	<button type="submit" class="btn btn-primary" ng-click="self.create(self.event)">Send</button>
   </div>
 </form>
-<form class="form-inline" ng-repeat="event in self.events | orderBy : 'createdAt' : true ">
+<form class="form-inline" ng-repeat="event in self.events">
 	<div class="form-group">
     <select class="form-control" ng-model="event._service" ng-options="service._id as service.name for service in self.services"></select>
   </div>
