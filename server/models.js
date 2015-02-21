@@ -60,12 +60,15 @@ eventSchema.post('save', function timestamp(next) {
 		// TODO: Websocket hooks to alert when status changes.
 		service.save();
 
-		// Notify Slack channel of current status.
-		Status.findById(event._status, function (err, status) {
-			event.service = service;
-			event.status = status;
-			slack.event(event);
-		});
+		// If new, notify Slack channel of current status.
+		// TODO: Make this a flag on the event.
+		if (this.createdAt === this.updatedAt) {
+			Status.findById(event._status, function (err, status) {
+				event.service = service;
+				event.status = status;
+				slack.event(event);
+			});
+		}
 
 	});
 
