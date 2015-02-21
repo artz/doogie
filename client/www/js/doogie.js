@@ -421,86 +421,6 @@ angular.module('doogie').controller('navController', ['$location', function ($lo
 	};
 }]);
 
-angular.module('doogie')
-
-/**
- * Hosts Service
- */
-.factory('Check', ['Resource', function (Resource) {
-	return Resource('checks/:_id', {
-		_id: '@_id'
-	});
-}]);
-
-angular.module('doogie')
-
-/**
- * Event Service
- */
-.factory('Event', ['Resource', function (Resource) {
-	return Resource('events/:_id', {
-		_id: '@_id'
-	});
-}]);
-
-angular.module('doogie')
-
-/**
- * Resource Service
- * http://kirkbushell.me/angular-js-using-ng-resource-in-a-more-restful-manner/
- */
-.factory('Resource', ['$resource', function ($resource) {
-	return function (url, paramDefaults, actions) {
-
-		url = '/api/' + url;
-
-		var defaults = {
-			update: {
-				method: 'put'
-			},
-			create: {
-				method: 'post'
-			}
-		};
-
-		actions = angular.extend(defaults, actions);
-
-		var resource = $resource(url, paramDefaults, actions);
-
-		resource.prototype.$save = function (callback) {
-			if (this._id) {
-				return this.$update(callback);
-			} else {
-				return this.$create(callback);
-			}
-		};
-
-		return resource;
-	};
-}]);
-
-angular.module('doogie')
-
-/**
- * Services Service
- */
-.factory('Service', ['Resource', function (Resource) {
-	return Resource('services/:_id', {
-		_id: '@_id'
-	});
-}]);
-
-angular.module('doogie')
-
-/**
- * Status Service
- */
-.factory('Status', ['Resource', function (Resource) {
-	return Resource('statuses/:_id', {
-		_id: '@_id'
-	});
-}]);
-
 /* doogieEvents.js */
 
 /**
@@ -783,6 +703,86 @@ angular.module('doogie').directive('doogieStatuses', function doogieStatuses() {
 	}
 
 });
+
+angular.module('doogie')
+
+/**
+ * Hosts Service
+ */
+.factory('Check', ['Resource', function (Resource) {
+	return Resource('checks/:_id', {
+		_id: '@_id'
+	});
+}]);
+
+angular.module('doogie')
+
+/**
+ * Event Service
+ */
+.factory('Event', ['Resource', function (Resource) {
+	return Resource('events/:_id', {
+		_id: '@_id'
+	});
+}]);
+
+angular.module('doogie')
+
+/**
+ * Resource Service
+ * http://kirkbushell.me/angular-js-using-ng-resource-in-a-more-restful-manner/
+ */
+.factory('Resource', ['$resource', function ($resource) {
+	return function (url, paramDefaults, actions) {
+
+		url = '/api/' + url;
+
+		var defaults = {
+			update: {
+				method: 'put'
+			},
+			create: {
+				method: 'post'
+			}
+		};
+
+		actions = angular.extend(defaults, actions);
+
+		var resource = $resource(url, paramDefaults, actions);
+
+		resource.prototype.$save = function (callback) {
+			if (this._id) {
+				return this.$update(callback);
+			} else {
+				return this.$create(callback);
+			}
+		};
+
+		return resource;
+	};
+}]);
+
+angular.module('doogie')
+
+/**
+ * Services Service
+ */
+.factory('Service', ['Resource', function (Resource) {
+	return Resource('services/:_id', {
+		_id: '@_id'
+	});
+}]);
+
+angular.module('doogie')
+
+/**
+ * Status Service
+ */
+.factory('Status', ['Resource', function (Resource) {
+	return Resource('statuses/:_id', {
+		_id: '@_id'
+	});
+}]);
 
 angular.module("doogie.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/admin.html","<doogie-events></doogie-events>\n<doogie-checks></doogie-checks>\n<doogie-services></doogie-services>\n<doogie-statuses></doogie-statuses>\n");
 $templateCache.put("templates/dashboard.html","<doogie-board legend=\"false\"></doogie-board>\n");

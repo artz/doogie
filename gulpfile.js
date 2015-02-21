@@ -10,9 +10,11 @@ var rename = require('gulp-rename');
 var git = require('git-rev');
 var replace = require('gulp-replace');
 var livereload = require('gulp-livereload');
+var svgmin = require('gulp-svgmin');
 
 var paths = {
 	sass: './client/scss/**/*.scss',
+	svg: './design/**/*.svg',
 	libJS: [
 		'./node_modules/jquery/dist/jquery.js',
 		'./node_modules/angular/angular.js',
@@ -93,8 +95,15 @@ gulp.task('sass', function () {
 		.pipe(gulp.dest('./client/www/css/'));
 });
 
+gulp.task('svg', function () {
+	return gulp.src(paths.svg)
+		.pipe(svgmin())
+		.pipe(gulp.dest('./client/www/svg/'));
+});
+
 gulp.task('watch', function () {
 	livereload.listen();
+	gulp.watch(paths.svg, ['svg']);
 	gulp.watch(paths.sass, ['sass']);
 	gulp.watch(paths.scripts, ['scripts']);
 	gulp.watch(paths.libJS, ['libJS']);
@@ -114,4 +123,4 @@ gulp.task('rev', function () {
 	});
 });
 
-gulp.task('default', ['templates', 'sass', 'libJS', 'libCSS', 'scripts', 'rev']);
+gulp.task('default', ['templates', 'sass', 'svg', 'libJS', 'libCSS', 'scripts', 'rev']);
