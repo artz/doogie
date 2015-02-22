@@ -18,6 +18,9 @@
 .doogieboard-events > .doogieboard-badge > .event-count {
 	display: inline-block;
 }
+.doogieboard-service-name > b {
+	font-weight: normal;
+}
 .doogieboard-badge:after {
 	/* content: "\e63a"; */
 	color: #6c995c;

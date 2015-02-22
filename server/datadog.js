@@ -35,13 +35,13 @@ module.exports = {
 			]
 		};
 
-		debug('DataDog Request', payload);
+		// debug('DataDog Request', payload);
 		request.post({
 			url: DATADOG_API,
 			json: true,
 			body: payload
 		}, function (err, response, body) {
-			debug('DataDog Response', err || body);
+			// debug('DataDog Response', err || body);
 		});
 	},
 
@@ -99,7 +99,6 @@ module.exports = {
 				aggregates[index] = [];
 				var start = data[0].date_happened;
 				var end = start - slice;
-				debug(end);
 				for (var i = 0, l = data.length; i < l; i += 1) {
 				  if (data[i].date_happened > end) {
 				    aggregates[index].push(data[i]);

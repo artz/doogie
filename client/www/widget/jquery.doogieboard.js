@@ -95,7 +95,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 				hash[service._id] = {};
 
 				var $tr = $('<tr></tr>');
-				$tr.append('<td class="service-name" data-service-id="' + service._id + '"><b>' + service.name + '</b></td>');
+				$tr.append('<td class="doogieboard-service-name" data-service-id="' + service._id + '"><b>' + service.name + '</b></td>');
 
 				for (var j = 0, k = days; j < k; j += 1) {
 					var $td = $('<td class="doogieboard-day daysago-' + j + '"><span class="doogieboard-badge"><b class="event-count"></b></span></td>');
@@ -159,7 +159,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 			}
 
 			if (options.sparkline) {
-				$table.find('.service-name').each(function () {
+				$table.find('.doogieboard-service-name').each(function () {
 					var $td = $(this);
 					var serviceId = $td.data('serviceId');
 					$.get(options.host + 'services/' + serviceId + '/sparkline', function (data) {
@@ -191,6 +191,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 				var $tr = $td.parent();
 				var date = $td.data('date');
 				date = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+				// TODO: This is showing same date.
 				$activeInfo = $('<tr class="doogieboard-info active"><td><span class="date">' + date + '</span></td><td colspan="' + days + '">' + $td.html() + '</td></tr>');
 				$tr.after($activeInfo);
 

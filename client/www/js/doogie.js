@@ -16,6 +16,12 @@ angular.module('doogie', [
 		});
 }]);
 
+angular.module('doogie').controller('navController', ['$location', function ($location) {
+	this.isActive = function (viewLocation) {
+		return viewLocation === $location.path();
+	};
+}]);
+
 /* doogieEvents.js */
 
 /**
@@ -298,12 +304,6 @@ angular.module('doogie').directive('doogieStatuses', function doogieStatuses() {
 	}
 
 });
-
-angular.module('doogie').controller('navController', ['$location', function ($location) {
-	this.isActive = function (viewLocation) {
-		return viewLocation === $location.path();
-	};
-}]);
 
 angular.module('doogie')
 
