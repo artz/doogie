@@ -5,7 +5,20 @@
 var defaults = {
 	days: 5,
 	host: '/api/',
-	legend: true
+	legend: true,
+	sparkline: {
+		disableInteraction: true,
+		width: 62,
+		height: 20,
+		lineWidth: 1,
+		lineColor: '#666',
+		fillColor: '#f5f5f5',
+		chartRangeMin: 0,
+		chartRangeMax: 100,
+		spotColor: false,
+		minSpotColor: false,
+		maxSpotColor: false
+	}
 };
 
 function formatAMPM(date) {
@@ -82,7 +95,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 				hash[service._id] = {};
 
 				var $tr = $('<tr></tr>');
-				$tr.append('<td class="service-name">' + service.name + '</td>');
+				$tr.append('<td class="service-name" data-service-id="' + service._id + '"><b>' + service.name + '</b></td>');
 
 				for (var j = 0, k = days; j < k; j += 1) {
 					var $td = $('<td class="doogieboard-day daysago-' + j + '"><span class="doogieboard-badge"><b class="event-count"></b></span></td>');
@@ -143,6 +156,21 @@ $.fn.doogieboard = function doogieBoard(options) {
 
 			if (isTimeago) {
 				$elem.find('.timeago').timeago();
+			}
+
+			if (options.sparkline) {
+				$table.find('.service-name').each(function () {
+					var $td = $(this);
+					var serviceId = $td.data('serviceId');
+					$.get(options.host + 'services/' + serviceId + '/sparkline', function (data) {
+						if (data.hourly && data.hourly.length) {
+							console.log('rendering sparkline', data.hourly);
+							var $sparkline = $('<span class="doogieboard-sparkline"></span>');
+							$td.append($sparkline);
+							$sparkline.sparkline(data.hourly, options.sparkline);
+						}
+					});
+				});
 			}
 
 			var $activeDay;

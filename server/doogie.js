@@ -85,6 +85,6 @@ function handleResults(err, alert) {
 	alert.statusCode = statusCode;
 	alert.responseTimeStatus = responseTimeStatus;
 
-	datadog(alert);
+	datadog.alert(alert);
 	slack.alert(alert);
 }

@@ -1,3 +1,86 @@
+.doogieboard-events {
+	cursor: pointer;
+}
+.doogieboard-events.active {
+	border-bottom: #f5f5f5;
+}
+.doogieboard-events > .event {
+	display: none;
+}
+.doogieboard-badge > .event-count {
+	margin-right: 6px;
+	background-color: #000;
+	color: #fff;
+	border-radius: 4px;
+	padding: 0 6px;
+	display: none;
+}
+.doogieboard-events > .doogieboard-badge > .event-count {
+	display: inline-block;
+}
+.doogieboard-badge:after {
+	// content: "\e63a";
+	color: #6c995c;
+	content: 'Online';
+}
+.doogieboard-day > .doogieboard-badge > .event-count {
+	background-color: #6c995c;
+}
+.doogieboard-day.level-0 .doogieboard-badge:after {
+	content: 'Online';
+}
+.doogieboard-day.level-1 > .doogieboard-badge > .event-count {
+	background-color: #cf8c59;
+}
+.doogieboard-day.level-1 .doogieboard-badge:after {
+	// content: "\e63c"
+	color: #cf8c59;
+	content: 'Alert';
+}
+.doogieboard-day.level-2 > .doogieboard-badge > .event-count {
+	background-color: #b85858;
+}
+.doogieboard-day.level-2 .doogieboard-badge:after {
+	// content: "\e63b"
+	color: #b85858;
+	content: 'Offline';
+}
+.doogieboard-info .doogieboard-badge {
+	display: none;
+}
+tr.doogieboard-info.active > td {
+	border-top: 0;
+}
+.doogieboard-day {
+	width: 16%;
+}
+.doogieboard-info > td > .event > h5 {
+	margin-bottom: 0;
+}
+.doogieboard-info > td > .event > h5 > .status {
+	background-color: #000;
+	color: #fff;
+	border-radius: 4px;
+	padding: 2px 6px;
+	font-size: 13px;
+	display: inline-block;
+}
+.doogieboard-info > td > .event.level-0 > h5 > .status {
+	background-color: #6c995c;
+}
+.doogieboard-info > td > .event.level-1 > h5 > .status {
+	background-color: #cf8c59;
+}
+.doogieboard-info > td > .event.level-2 > h5 > .status {
+	background-color: #b85858;
+}
+.doogieboard-info > td > .event > .message {
+	font-size: 18px;
+}
+.doogieboard-sparkline {
+	float: right;
+}
+
 /*!
  * Bootstrap v3.3.2 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.

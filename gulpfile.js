@@ -17,12 +17,16 @@ var paths = {
 	svg: './design/**/*.svg',
 	libJS: [
 		'./node_modules/jquery/dist/jquery.js',
+		'./widget/jquery.timeago.js',
+		'./widget/jquery.sparkline.js',
+		'./widget/jquery.doogieboard.js',
 		'./node_modules/angular/angular.js',
 		'./node_modules/angular-sanitize/angular-sanitize.js',
 		'./node_modules/angular-resource/angular-resource.js',
 		'./node_modules/angular-route/angular-route.js'
 	],
 	libCSS: [
+		'./widget/jquery.doogieboard.css',
 		'./node_modules/bootstrap/dist/css/bootstrap.css'
 	],
 	scripts: [
@@ -40,6 +44,8 @@ gulp.task('templates', function () {
 		}))
 		.pipe(gulp.dest('./client/scripts/templates'));
  });
+
+
 
 gulp.task('libJS', function () {
 	gulp.src(paths.libJS)
@@ -89,10 +95,26 @@ gulp.task('sass', function () {
  		}))
 		.pipe(gulp.dest('./client/www/css/'))
 		.pipe(rename({ extname: '.min.css' }))
-		.pipe(minifyCss({
-			keepSpecialComments: 0
-	 	}))
+		.pipe(minifyCss())
 		.pipe(gulp.dest('./client/www/css/'));
+});
+
+gulp.task('widgetCSS', function () {
+	return gulp.src('./widget/**.css')
+		.pipe(gulp.dest('./client/www/widget/'))
+		.pipe(rename({ extname: '.min.css' }))
+		.pipe(minifyCss())
+		.pipe(gulp.dest('./client/www/widget/'));
+});
+
+gulp.task('widgetJS', function () {
+	return gulp.src('./widget/**.js')
+		.pipe(sourcemaps.init())
+		.pipe(gulp.dest('./client/www/widget/'))
+		.pipe(rename({ extname: '.min.js' }))
+		.pipe(uglify())
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest('./client/www/widget/'));
 });
 
 gulp.task('svg', function () {
@@ -123,4 +145,4 @@ gulp.task('rev', function () {
 	});
 });
 
-gulp.task('default', ['templates', 'sass', 'svg', 'libJS', 'libCSS', 'scripts', 'rev']);
+gulp.task('default', ['templates', 'sass', 'svg', 'libJS', 'libCSS', 'widgetJS', 'widgetCSS', 'scripts', 'rev']);
