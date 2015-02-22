@@ -12583,7 +12583,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 				for (var j = 0, k = days; j < k; j += 1) {
 					var $td = $('<td class="doogieboard-day daysago-' + j + '"><span class="doogieboard-badge"><b class="event-count"></b></span></td>');
 					$td.data('eventCount', 0);
-					$td.data('date', date);
+					$td.data('date', date.toISOString());
 					hash[service._id][date.getMonth() + '-' + date.getDate()] = $td;
 					$tr.append($td);
 					date.setDate(date.getDate() - 1);
@@ -12647,7 +12647,6 @@ $.fn.doogieboard = function doogieBoard(options) {
 					var serviceId = $td.data('serviceId');
 					$.get(options.host + 'services/' + serviceId + '/sparkline', function (data) {
 						if (data.hourly && data.hourly.length) {
-							console.log('rendering sparkline', data.hourly);
 							var $sparkline = $('<span class="doogieboard-sparkline"></span>');
 							$td.append($sparkline);
 							$sparkline.sparkline(data.hourly, options.sparkline);
@@ -12672,7 +12671,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 				$td.addClass('events-open active');
 				$activeDay = $td;
 				var $tr = $td.parent();
-				var date = $td.data('date');
+				var date = new Date($td.data('date'));
 				date = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
 				// TODO: This is showing same date.
 				$activeInfo = $('<tr class="doogieboard-info active"><td><span class="date">' + date + '</span></td><td colspan="' + days + '">' + $td.html() + '</td></tr>');
