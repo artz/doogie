@@ -2,6 +2,11 @@
 'use strict';
 
 var request = require('request');
+var Cache = require('node-cache');
+var sparklineCache = new Cache({
+	stdTTL: 60 * 15, // 15 minutes
+	checkperiod: 60 * 5 // 5 minutes
+});
 var debug = require('debug')('doogie');
 var app = require('express')();
 var url = require('url');
@@ -41,9 +46,13 @@ module.exports = {
 	},
 
 	sparkline: function (req, res, next) {
-		// Convert to seconds.
-		var now = parseInt(Date.now() / 1000);
+
 		var serviceId = req.params.serviceId;
+		var results = sparklineCache.get(serviceId);
+		if (results[serviceId]) {
+			return res.json(results[serviceId]);
+		}
+		var now = parseInt(Date.now() / 1000); // Convert to seconds.
 		request.get({
 			url: DATADOG_API,
 			json: true,
@@ -53,7 +62,6 @@ module.exports = {
 				start: now - (60 * 60 * 24 * 1) // 5 days
 			}
 		}, function (err, response) {
-
 			if (err) {
 				return res.status(400).send(err);
 			}
@@ -73,11 +81,12 @@ module.exports = {
 			var aggregatedHourlyData = aggregateData(alerts, 1);
 
 			// Determine percentage of successful checks.
-			var results = {
+			results = {
 				hourly: averageData(aggregatedHourlyData)
 			};
 
-			res.json(err || results);
+			sparklineCache.set(serviceId, results);
+			res.json(results);
 
 			function aggregateData(data, timeSlice) {
 				if (!data.length) {
