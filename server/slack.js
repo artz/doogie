@@ -27,7 +27,7 @@ module.exports = {
 
 	alert: function slackAlert(info) {
 		// POST to Slack webhook API.
-		if (info.alertType !== 'success') {
+		if (info.alertType === 'error') {
 			var payload = {
 				channel: '#amp-success',
 				text: info.alertType.toUpperCase() + ': ' + info.text
