@@ -19,7 +19,7 @@
 	display: inline-block;
 }
 .doogieboard-badge:after {
-	// content: "\e63a";
+	/* content: "\e63a"; */
 	color: #6c995c;
 	content: 'Online';
 }
@@ -33,7 +33,7 @@
 	background-color: #cf8c59;
 }
 .doogieboard-day.level-1 .doogieboard-badge:after {
-	// content: "\e63c"
+	/* content: "\e63c" */
 	color: #cf8c59;
 	content: 'Alert';
 }
@@ -41,7 +41,7 @@
 	background-color: #b85858;
 }
 .doogieboard-day.level-2 .doogieboard-badge:after {
-	// content: "\e63b"
+	/* content: "\e63b" */
 	color: #b85858;
 	content: 'Offline';
 }
