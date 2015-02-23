@@ -12494,7 +12494,7 @@ var defaults = {
 		width: 62,
 		height: 20,
 		lineWidth: 1,
-		lineColor: '#666',
+		lineColor: '#6b6b6b',
 		fillColor: '#f5f5f5',
 		chartRangeMin: 0,
 		chartRangeMax: 100,
