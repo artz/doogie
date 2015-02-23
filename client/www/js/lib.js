@@ -12487,7 +12487,7 @@ return jQuery;
 
 var defaults = {
 	days: 5,
-	host: '/api/',
+	host: 'http://doogie-env.elasticbeanstalk.com/api/',
 	legend: true,
 	sparkline: {
 		disableInteraction: true,

@@ -4,6 +4,9 @@
 var debug = require('debug')('doogie');
 var app = require('express')();
 
+var cors = require('cors');
+app.use(cors());
+
 var compression = require('compression');
 app.use(compression());
 

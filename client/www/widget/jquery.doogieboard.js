@@ -4,7 +4,8 @@
 
 var defaults = {
 	days: 5,
-	host: '/api/',
+	// host: 'http://doogie-env.elasticbeanstalk.com/api/',
+	host: 'http://localhost.aol.com:8081/api/',
 	legend: true,
 	sparkline: {
 		disableInteraction: true,
