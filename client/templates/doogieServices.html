@@ -12,7 +12,7 @@
   </div>
 </form>
 
-<form class="form-inline" ng-repeat="service in self.services | orderBy: 'name'">
+<form class="form-inline" ng-repeat="service in self.services">
 	<div class="form-group">
     <input type="text" class="form-control" placeholder="Name" ng-model="service.name">
   </div>
