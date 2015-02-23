@@ -32,7 +32,9 @@ var paths = {
 	scripts: [
 		'./client/scripts/**/*.js'
 	],
-	templates: './client/templates/**/*.html'
+	templates: './client/templates/**/*.html',
+	widgetCSS: './widget/**.css',
+	widgetJS: './widget/**.js'
  };
 
 gulp.task('templates', function () {
@@ -44,8 +46,6 @@ gulp.task('templates', function () {
 		}))
 		.pipe(gulp.dest('./client/scripts/templates'));
  });
-
-
 
 gulp.task('libJS', function () {
 	gulp.src(paths.libJS)
@@ -100,7 +100,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('widgetCSS', function () {
-	return gulp.src('./widget/**.css')
+	return gulp.src(paths.widgetCSS)
 		.pipe(gulp.dest('./client/www/widget/'))
 		.pipe(rename({ extname: '.min.css' }))
 		.pipe(minifyCss())
@@ -108,7 +108,7 @@ gulp.task('widgetCSS', function () {
 });
 
 gulp.task('widgetJS', function () {
-	return gulp.src('./widget/**.js')
+	return gulp.src(paths.widgetJS)
 		.pipe(sourcemaps.init())
 		.pipe(gulp.dest('./client/www/widget/'))
 		.pipe(rename({ extname: '.min.js' }))
@@ -130,6 +130,8 @@ gulp.task('watch', function () {
 	gulp.watch(paths.scripts, ['scripts']);
 	gulp.watch(paths.libJS, ['libJS']);
 	gulp.watch(paths.libCSS, ['libCSS']);
+	gulp.watch(paths.widgetJS, ['widgetJS']);
+	gulp.watch(paths.widgetCSS, ['widgetCSS']);
 	gulp.watch(paths.templates, ['templates']);
 	gulp.watch('./client/www/**').on('change', livereload.changed);
  });
