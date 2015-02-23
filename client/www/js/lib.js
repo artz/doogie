@@ -12488,6 +12488,7 @@ return jQuery;
 var defaults = {
 	days: 5,
 	host: 'http://doogie-env.elasticbeanstalk.com/api/',
+	// host: '/api/',
 	// legend: true,
 	sparkline: {
 		disableInteraction: true,
@@ -12581,7 +12582,11 @@ $.fn.doogieboard = function doogieBoard(options) {
 				$tr.append('<td class="doogieboard-service-name" data-service-id="' + service._id + '"><b>' + service.name + '</b></td>');
 
 				for (var j = 0, k = days; j < k; j += 1) {
-					var $td = $('<td class="doogieboard-day daysago-' + j + '"><span class="doogieboard-badge"><b class="event-count"></b></span></td>');
+
+					var $td = $('<td class="doogieboard-day daysago-' + j +
+						'"><span class="doogieboard-badge"><b class="event-count"></b><i class="event-status">Online</i></span></td>');
+					console.log($td);
+
 					$td.data('eventCount', 0);
 					$td.data('date', date.toISOString());
 					hash[service._id][date.getMonth() + '-' + date.getDate()] = $td;
@@ -12604,20 +12609,25 @@ $.fn.doogieboard = function doogieBoard(options) {
 				var createdAt = new Date(event.createdAt);
 				var $td = hash[event._service._id][createdAt.getMonth() + '-' + createdAt.getDate()];
 
-				if (!$td.data('hasEvents')) {
-					$td.data('hasEvents', true);
-					$td.addClass('doogieboard-events');
-					$td.addClass('level-' + event._status.level);
+				// TODO: Find out why this is empty sometimes.
+				if ($td) {
+					if (!$td.data('hasEvents')) {
+						$td.data('hasEvents', true);
+						$td.addClass('doogieboard-events');
+						$td.addClass('level-' + event._status.level);
+						$td.find('.event-status').html(event._status.name);
+					}
+
+					var eventCount = $td.data('eventCount') + 1;
+					$td.data('eventCount', eventCount);
+					$td.find('.event-count').html(eventCount);
+
+					$td.append('<div class="event level-' + event._status.level + '"><h5><b class="status">' + event._status.name +
+						'</b> <small>at ' + formatAMPM(createdAt) + ', <time class="timeago" datetime="' + createdAt.toISOString() + '">' +
+						createdAt.getMonth() + '/' + createdAt.getDate() + ' ' + createdAt.getHours() + ':' + createdAt.getMinutes() +
+						'</time></small></h5><p class="message">' + event.message + '</p></div>');
 				}
 
-				var eventCount = $td.data('eventCount') + 1;
-				$td.data('eventCount', eventCount);
-				$td.find('.event-count').html(eventCount);
-
-				$td.append('<div class="event level-' + event._status.level + '"><h5><b class="status">' + event._status.name +
-					'</b> <small>at ' + formatAMPM(createdAt) + ', <time class="timeago" datetime="' + createdAt.toISOString() + '">' +
-					createdAt.getMonth() + '/' + createdAt.getDate() + ' ' + createdAt.getHours() + ':' + createdAt.getMinutes() +
-					'</time></small></h5><p class="message">' + event.message + '</p></div>');
 			}
 
 			// Update DOM.
@@ -12673,7 +12683,6 @@ $.fn.doogieboard = function doogieBoard(options) {
 				var $tr = $td.parent();
 				var date = new Date($td.data('date'));
 				date = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-				// TODO: This is showing same date.
 				$activeInfo = $('<tr class="doogieboard-info active"><td><span class="date">' + date + '</span></td><td colspan="' + days + '">' + $td.html() + '</td></tr>');
 				$tr.after($activeInfo);
 

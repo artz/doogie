@@ -55,6 +55,7 @@ eventSchema.post('save', function timestamp(next) {
 		if (err) {
 			return next(err);
 		}
+		// TODO: Update this on deletes.
 		service._lastStatus = event._status;
 		service._lastEvent = event._id;
 		// TODO: Websocket hooks to alert when status changes.
@@ -62,6 +63,7 @@ eventSchema.post('save', function timestamp(next) {
 
 		// If new, notify Slack channel of current status.
 		// TODO: Make this a flag on the event.
+		// TODO: Test this, seems to not be working.
 		if (this.createdAt === this.updatedAt) {
 			Status.findById(event._status, function (err, status) {
 				event.service = service;

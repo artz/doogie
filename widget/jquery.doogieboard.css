@@ -24,29 +24,37 @@
 .doogieboard-badge:after {
 	/* content: "\e63a"; */
 	color: #6c995c;
-	content: 'Online';
+	/* content: 'Online'; */
 }
 .doogieboard-day > .doogieboard-badge > .event-count {
 	background-color: #6c995c;
 }
 .doogieboard-day.level-0 .doogieboard-badge:after {
-	content: 'Online';
+	/* content: 'Online'; */
 }
 .doogieboard-day.level-1 > .doogieboard-badge > .event-count {
-	background-color: #cf8c59;
+	background-color: #4f649b;
 }
 .doogieboard-day.level-1 .doogieboard-badge:after {
 	/* content: "\e63c" */
-	color: #cf8c59;
-	content: 'Alert';
+	color: #4f649b;
+	/* content: 'Info'; */
 }
 .doogieboard-day.level-2 > .doogieboard-badge > .event-count {
-	background-color: #b85858;
+	background-color: #cf8c59;
 }
 .doogieboard-day.level-2 .doogieboard-badge:after {
+	/* content: "\e63c" */
+	color: #cf8c59;
+	/* content: 'Alert'; */
+}
+.doogieboard-day.level-3 > .doogieboard-badge > .event-count {
+	background-color: #b85858;
+}
+.doogieboard-day.level-3 .doogieboard-badge:after {
 	/* content: "\e63b" */
 	color: #b85858;
-	content: 'Offline';
+	/* content: 'Offline'; */
 }
 .doogieboard-info .doogieboard-badge {
 	display: none;
@@ -73,9 +81,12 @@ tr.doogieboard-info.active > td {
 	background-color: #6c995c;
 }
 .doogieboard-info > td > .event.level-1 > h5 > .status {
-	background-color: #cf8c59;
+	background-color: #4f649b;
 }
 .doogieboard-info > td > .event.level-2 > h5 > .status {
+	background-color: #cf8c59;
+}
+.doogieboard-info > td > .event.level-3 > h5 > .status {
 	background-color: #b85858;
 }
 .doogieboard-info > td > .event > .message {
