@@ -21,40 +21,29 @@
 .doogieboard-service-name > b {
 	font-weight: normal;
 }
-.doogieboard-badge:after {
-	/* content: "\e63a"; */
+.doogieboard-day {
 	color: #6c995c;
-	/* content: 'Online'; */
 }
 .doogieboard-day > .doogieboard-badge > .event-count {
 	background-color: #6c995c;
 }
-.doogieboard-day.level-0 .doogieboard-badge:after {
-	/* content: 'Online'; */
+.doogieboard-day.level-1 {
+	color: #4f649b;
 }
 .doogieboard-day.level-1 > .doogieboard-badge > .event-count {
 	background-color: #4f649b;
 }
-.doogieboard-day.level-1 .doogieboard-badge:after {
-	/* content: "\e63c" */
-	color: #4f649b;
-	/* content: 'Info'; */
+.doogieboard-day.level-2 {
+	color: #cf8c59;
 }
 .doogieboard-day.level-2 > .doogieboard-badge > .event-count {
 	background-color: #cf8c59;
 }
-.doogieboard-day.level-2 .doogieboard-badge:after {
-	/* content: "\e63c" */
-	color: #cf8c59;
-	/* content: 'Alert'; */
+.doogieboard-day.level-3 {
+	color: #b85858;
 }
 .doogieboard-day.level-3 > .doogieboard-badge > .event-count {
 	background-color: #b85858;
-}
-.doogieboard-day.level-3 .doogieboard-badge:after {
-	/* content: "\e63b" */
-	color: #b85858;
-	/* content: 'Offline'; */
 }
 .doogieboard-info .doogieboard-badge {
 	display: none;

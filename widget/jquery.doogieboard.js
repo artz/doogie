@@ -102,7 +102,6 @@ $.fn.doogieboard = function doogieBoard(options) {
 
 					var $td = $('<td class="doogieboard-day daysago-' + j +
 						'"><span class="doogieboard-badge"><b class="event-count"></b><i class="event-status">Online</i></span></td>');
-					console.log($td);
 
 					$td.data('eventCount', 0);
 					$td.data('date', date.toISOString());
