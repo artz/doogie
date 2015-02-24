@@ -10,7 +10,9 @@ var sparklineCache = new Cache({
 var debug = require('debug')('doogie');
 var app = require('express')();
 var url = require('url');
-var DATADOG_API = 'https://app.datadoghq.com/api/v1/events?api_key=9ce6531be415dd204c4ca03a016adebb&application_key=7ff57aa5e1f7ffe9e55a329e031bcad92f8a6ed7';
+var config = require('../config');
+
+var DATADOG_API = config.datadog.api;
 
 module.exports = {
 	alert: function datadogAlert(alert) {

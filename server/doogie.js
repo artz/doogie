@@ -7,6 +7,7 @@ var datadog = require('./datadog');
 var slack = require('./slack');
 var Check = mongoose.model('Check');
 var colors = require('colors');
+var config = require('../config');
 
 colors.setTheme({
 	success: 'green',
@@ -14,7 +15,7 @@ colors.setTheme({
 	error: 'red'
 });
 
-setInterval(runChecks, 2 * 60 * 1000); // 2 minute interval.
+setInterval(runChecks, config.checkInterval * 60 * 1000); // Convert from minutes to milliseconds.
 runChecks();
 
 function runChecks() {

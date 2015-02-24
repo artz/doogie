@@ -1,0 +1,11 @@
+{
+	"datadog": {
+		"api": "https://app.datadoghq.com/api/v1/events?api_key={{apiKey}}&application_key={{appKey}}"
+	},
+	"slack": {
+		"alertChannel": "#alerts",
+		"updateChannel": "#updates",
+		"api": "https://hooks.slack.com/services/{{webHookKey}}"
+	},
+	"checkInterval": 2
+}

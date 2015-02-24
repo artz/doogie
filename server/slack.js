@@ -3,7 +3,9 @@
 
 var debug = require('debug')('doogie');
 var request = require('request');
-var SLACK_API = 'https://hooks.slack.com/services/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';
+var config = require('../config');
+
+var SLACK_API = config.slack.api;
 
 module.exports = {
 
@@ -11,7 +13,7 @@ module.exports = {
 		var service = event.service;
 		var status = event.status;
 		var payload = {
-			channel: '#amp-success',
+			channel: config.updateChannel,
 			text: '[' + service.name + ' ' + status.name + '] ' + event.message
 		};
 
@@ -29,7 +31,7 @@ module.exports = {
 		// POST to Slack webhook API.
 		if (info.alertType === 'error') {
 			var payload = {
-				channel: '#amp-success',
+				channel: config.alertChannel,
 				text: info.alertType.toUpperCase() + ': ' + info.text
 			};
 
