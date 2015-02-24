@@ -12571,6 +12571,21 @@ $.fn.doogieboard = function doogieBoard(options) {
 			// Store DOM nodes for fast retrieval.
 			var hash = {};
 
+			// Find and set default status.
+			var level0Status;
+			statuses = statuses[0];
+			for (var i = 0, l = statuses.length; i < l; i += 1) {
+				if (statuses[i].level === 0) {
+					level0Status = statuses[i];
+					console.log('Setting level0Status:', level0Status);
+					break;
+				}
+			}
+			if (!level0Status) {
+				console.log('Doogieboard Error: Please configure a level 0 status.');
+			}
+
+			// Render service names.
 			services = services[0];
 			for (var i = 0, l = services.length; i < l; i += 1) {
 
@@ -12584,7 +12599,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 				for (var j = 0, k = days; j < k; j += 1) {
 
 					var $td = $('<td class="doogieboard-day daysago-' + j +
-						'"><span class="doogieboard-badge"><b class="event-count"></b><i class="event-status">Online</i></span></td>');
+						'"><span class="doogieboard-badge"><b class="event-count"></b><i class="event-status">' + level0Status.name + '</i></span></td>');
 
 					$td.data('eventCount', 0);
 					$td.data('date', date.toISOString());
@@ -12596,6 +12611,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 					// Note: This fails to carry unchanged status through to yesterday.
 					if (j === 0 && service._lastStatus) {
 						$td.addClass('level-' + service._lastStatus.level);
+						$td.find('.event-status').html(service._lastStatus.name);
 					}
 				}
 
@@ -12633,6 +12649,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 			$table.append($thead);
 			$table.append($tbody);
 			$elem.append($table);
+			$elem.trigger('doogieboard-ready');
 
 			if (options.legend) {
 				statuses = statuses[0];
@@ -12686,9 +12703,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 				$tr.after($activeInfo);
 
 			});
-
 		});
-
 	});
 };
 
