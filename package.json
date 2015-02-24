@@ -4,6 +4,7 @@
   "description": "Doogie Browser, M.D.: A simple health status service.",
   "main": "./server/server.js",
   "dependencies": {
+    "colors": "^1.0.3",
     "compression": "^1.4.1",
     "cors": "^2.5.3",
     "debug": "^2.1.1",

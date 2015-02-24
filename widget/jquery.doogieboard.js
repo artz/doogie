@@ -94,12 +94,11 @@ $.fn.doogieboard = function doogieBoard(options) {
 			for (var i = 0, l = statuses.length; i < l; i += 1) {
 				if (statuses[i].level === 0) {
 					level0Status = statuses[i];
-					console.log('Setting level0Status:', level0Status);
 					break;
 				}
 			}
 			if (!level0Status) {
-				console.log('Doogieboard Error: Please configure a level 0 status.');
+				window.console && console.log('Doogieboard Error: Please configure a level 0 status.');
 			}
 
 			// Render service names.

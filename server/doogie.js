@@ -6,17 +6,22 @@ var debug = require('debug')('doogie');
 var datadog = require('./datadog');
 var slack = require('./slack');
 var Check = mongoose.model('Check');
+var colors = require('colors');
+
+colors.setTheme({
+	success: 'green',
+	warning: 'yellow',
+	error: 'red'
+});
 
 setInterval(runChecks, 2 * 60 * 1000); // 2 minute interval.
 runChecks();
 
 function runChecks() {
-	debug('Running host checks...');
 	Check.find({})
 		.populate('_service')
 		.exec(function (err, checks) {
 		checks.forEach(function (check) {
-			debug('Checking ' + check.url + '...');
 			var alert = {
 				check: check,
 				service: check._service,
@@ -87,4 +92,7 @@ function handleResults(err, alert) {
 
 	datadog.alert(alert);
 	slack.alert(alert);
+
+	var symbol = alert.alertType === 'success' ? '✔' : '✘';
+	debug(symbol[alert.alertType] + ' GET ' + alert.url + (' ➜ ' + alert.alertType)[alert.alertType] + ' ' + statusCode + ' ' + alert.responseTime + 'ms');
 }

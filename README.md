@@ -4,9 +4,11 @@ Doogie is a health status service, enabling you to quickly send updates to your 
 
 ## roadmap
 
+* Support POST body
+* Check body response for pattern
 * Doogieboard auto-update
 * Usage and API documentation
-* Verify error checks.
+* Verify error checks
 * service slack channels
 * daily availability numbers
 * admin UI tabs
