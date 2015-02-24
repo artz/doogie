@@ -57,7 +57,7 @@ $.fn.doogieboard = function doogieBoard(options) {
 		__sort: 'level'
 	});
 
-	this.each(function (index, elem) {
+	return this.each(function (index, elem) {
 
 		var days = options.days;
 
