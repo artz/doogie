@@ -33,47 +33,46 @@ angular.module('doogie').directive('doogieBar', function doogieBar() {
 	var directive = {
 		scope: {},
 		templateUrl: 'templates/doogieBar.html',
-		controller: barController,
+		controller: ['Event', 'Status', 'Service', function barController(Event, Status, Service) {
+
+			var self = this;
+
+			function refresh() {
+				self.events = Event.query();
+			}
+			refresh();
+
+			self.services = Service.query({
+				__sort: 'name'
+			});
+
+			self.statuses = Status.query({
+				__sort: 'level'
+			});
+
+			self.event = {};
+
+			self.create = function (event) {
+				new Event(event).$save().then(function () {
+					refresh();
+					self.event = {};
+				});
+			};
+
+			self.update = function (event) {
+				event.$save().then(refresh);
+			};
+
+			self.delete = function (event) {
+				event.$delete().then(function () {
+					refresh();
+				});
+			};
+		}],
 		controllerAs: 'self'
 	};
 	return directive;
 
-	function barController(Event, Status, Service) {
-
-		var self = this;
-
-		function refresh() {
-			self.events = Event.query();
-		}
-		refresh();
-
-		self.services = Service.query({
-			__sort: 'name'
-		});
-
-		self.statuses = Status.query({
-			__sort: 'level'
-		});
-
-		self.event = {};
-
-		self.create = function (event) {
-			new Event(event).$save().then(function () {
-				refresh();
-				self.event = {};
-			});
-		};
-
-		self.update = function (event) {
-			event.$save().then(refresh);
-		};
-
-		self.delete = function (event) {
-			event.$delete().then(function () {
-				refresh();
-			});
-		};
-	}
 
 });
 
@@ -83,7 +82,7 @@ angular.module('doogie').directive('doogieBar', function doogieBar() {
 * List doogie events and enable editing.
 * @example <doogie-events></doogie-events>
 */
-angular.module('doogie').directive('doogieBoard', ['$timeout', function doogieEvents($timeout) {
+angular.module('doogie').directive('doogieBoard', function () {
 
 	var directive = {
 		link: link
@@ -98,7 +97,7 @@ angular.module('doogie').directive('doogieBoard', ['$timeout', function doogieEv
 		});
 	}
 
-}]);
+});
 
 /* doogieServices.js */
 
@@ -111,48 +110,47 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 	var directive = {
 		scope: {},
 		templateUrl: 'templates/doogieChecks.html',
-		controller: checksController,
+		controller: ['Service', 'Check', function checksController(Service, Check) {
+			var self = this;
+
+			function refresh() {
+				self.checks = Check.query();
+			}
+			refresh();
+
+			self.services = Service.query({
+				__sort: 'name'
+			});
+
+			self.check = {
+				method: 'GET',
+				successCode: '^2[0-9][0-9]$',
+				successResponseTime: 1000,
+				errorResponseTime: 6000
+			};
+
+			self.create = function (check) {
+				new Check(check).$save().then(function () {
+					refresh();
+					self.check = {};
+				});
+			};
+
+			self.update = function (check) {
+				check.$save().then(refresh);
+			};
+
+			self.delete = function (check) {
+				check.$delete().then(function () {
+					refresh();
+				});
+			};
+		}],
 		controllerAs: 'self'
 	};
 	return directive;
 
-	function checksController(Service, Check) {
 
-		var self = this;
-
-		function refresh() {
-			self.checks = Check.query();
-		}
-		refresh();
-
-		self.services = Service.query({
-			__sort: 'name'
-		});
-
-		self.check = {
-			method: 'GET',
-			successCode: '^2[0-9][0-9]$',
-			successResponseTime: 1000,
-			errorResponseTime: 6000
-		};
-
-		self.create = function (check) {
-			new Check(check).$save().then(function () {
-				refresh();
-				self.check = {};
-			});
-		};
-
-		self.update = function (check) {
-			check.$save().then(refresh);
-		};
-
-		self.delete = function (check) {
-			check.$delete().then(function () {
-				refresh();
-			});
-		};
-	}
 
 });
 
@@ -167,47 +165,47 @@ angular.module('doogie').directive('doogieEvents', function doogieEvents() {
 	var directive = {
 		scope: {},
 		templateUrl: 'templates/doogieEvents.html',
-		controller: eventsController,
+		controller: ['Event', 'Status', 'Service', function eventsController(Event, Status, Service) {
+
+			var self = this;
+
+			function refresh() {
+				self.events = Event.query();
+			}
+			refresh();
+
+			self.services = Service.query({
+				__sort: 'name'
+			});
+
+			self.statuses = Status.query({
+				__sort: 'level'
+			});
+
+			self.event = {};
+
+			self.create = function (event) {
+				new Event(event).$save().then(function () {
+					refresh();
+					self.event = {};
+				});
+			};
+
+			self.update = function (event) {
+				event.$save().then(refresh);
+			};
+
+			self.delete = function (event) {
+				event.$delete().then(function () {
+					refresh();
+				});
+			};
+		}],
 		controllerAs: 'self'
 	};
 	return directive;
 
-	function eventsController(Event, Status, Service) {
 
-		var self = this;
-
-		function refresh() {
-			self.events = Event.query();
-		}
-		refresh();
-
-		self.services = Service.query({
-			__sort: 'name'
-		});
-
-		self.statuses = Status.query({
-			__sort: 'level'
-		});
-
-		self.event = {};
-
-		self.create = function (event) {
-			new Event(event).$save().then(function () {
-				refresh();
-				self.event = {};
-			});
-		};
-
-		self.update = function (event) {
-			event.$save().then(refresh);
-		};
-
-		self.delete = function (event) {
-			event.$delete().then(function () {
-				refresh();
-			});
-		};
-	}
 
 });
 
@@ -222,39 +220,38 @@ angular.module('doogie').directive('doogieServices', function doogieServices() {
 	var directive = {
 		scope: {},
 		templateUrl: 'templates/doogieServices.html',
-		controller: servicesController,
+		controller: ['Service', function servicesController(Service) {
+
+			var self = this;
+
+			function refresh() {
+				self.services = Service.query();
+			}
+			refresh();
+
+			self.service = {};
+
+			self.create = function (service) {
+				new Service(service).$save().then(function () {
+					refresh();
+					self.service = {};
+				});
+			};
+
+			self.update = function (service) {
+				service.$save().then(refresh);
+			};
+
+			self.delete = function (service) {
+				service.$delete().then(function () {
+					refresh();
+				});
+			};
+		}],
 		controllerAs: 'self'
 	};
 	return directive;
 
-	function servicesController(Service) {
-
-		var self = this;
-
-		function refresh() {
-			self.services = Service.query();
-		}
-		refresh();
-
-		self.service = {};
-
-		self.create = function (service) {
-			new Service(service).$save().then(function () {
-				refresh();
-				self.service = {};
-			});
-		};
-
-		self.update = function (service) {
-			service.$save().then(refresh);
-		};
-
-		self.delete = function (service) {
-			service.$delete().then(function () {
-				refresh();
-			});
-		};
-	}
 
 });
 
@@ -269,39 +266,38 @@ angular.module('doogie').directive('doogieStatuses', function doogieStatuses() {
 	var directive = {
 		scope: {},
 		templateUrl: 'templates/doogieStatuses.html',
-		controller: statusesController,
+		controller: ['Status', function statusesController(Status) {
+
+			var self = this;
+
+			function refresh() {
+				self.statuses = Status.query();
+			}
+			refresh();
+
+			self.status = {};
+
+			self.create = function (status) {
+				new Status(status).$save().then(function () {
+					refresh();
+					self.status = {};
+				});
+			};
+
+			self.update = function (status) {
+				status.$save().then(refresh);
+			};
+
+			self.delete = function (status) {
+				status.$delete().then(function () {
+					refresh();
+				});
+			};
+		}],
 		controllerAs: 'self'
 	};
 	return directive;
 
-	function statusesController(Status) {
-
-		var self = this;
-
-		function refresh() {
-			self.statuses = Status.query();
-		}
-		refresh();
-
-		self.status = {};
-
-		self.create = function (status) {
-			new Status(status).$save().then(function () {
-				refresh();
-				self.status = {};
-			});
-		};
-
-		self.update = function (status) {
-			status.$save().then(refresh);
-		};
-
-		self.delete = function (status) {
-			status.$delete().then(function () {
-				refresh();
-			});
-		};
-	}
 
 });
 

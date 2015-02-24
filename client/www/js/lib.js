@@ -12487,7 +12487,7 @@ return jQuery;
 
 var defaults = {
 	days: 5,
-	host: 'http://doogie-env.elasticbeanstalk.com/api/',
+	host: 'http://doogie.amp.aol.com/api/',
 	// host: '/api/',
 	// legend: true,
 	sparkline: {

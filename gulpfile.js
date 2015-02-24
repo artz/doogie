@@ -67,7 +67,7 @@ gulp.task('scripts', function () {
 	gulp.src(paths.scripts)
 		.pipe(sourcemaps.init())
 		.pipe(concat('doogie.js'))
-		.pipe(ngAnnotate({ add: true, single_quotes: true }))
+		.pipe(ngAnnotate({ add: true, single_quotes: true, beautify: true }))
 		.on('error', function (err) {
 			console.error(err.toString());
 			this.emit('end');

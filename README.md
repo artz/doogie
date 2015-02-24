@@ -1,6 +1,6 @@
 # doogie
 
-
+Doogie is a health status service, enabling you to quickly send updates to your customers across a number of mediums.
 
 ## roadmap
 

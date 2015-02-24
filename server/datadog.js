@@ -57,7 +57,7 @@ module.exports = {
 			url: DATADOG_API,
 			json: true,
 			qs: {
-				tags: 'doogie,env:' + app.get('env').toLowerCase() + ',service_id:' + serviceId,
+				tags: ('doogie,env:' + app.get('env') + ',service_id:' + serviceId).toLowerCase(),
 				end: now,
 				start: now - (60 * 60 * 24 * 1) // 5 days
 			}

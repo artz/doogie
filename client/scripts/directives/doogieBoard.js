@@ -4,7 +4,7 @@
 * List doogie events and enable editing.
 * @example <doogie-events></doogie-events>
 */
-angular.module('doogie').directive('doogieBoard', function doogieEvents($timeout) {
+angular.module('doogie').directive('doogieBoard', function () {
 
 	var directive = {
 		link: link
