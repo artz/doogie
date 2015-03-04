@@ -7,13 +7,16 @@ var config = require('../config');
 
 var SLACK_API = config.slack.api;
 
+debug('Slack alert channel: ' + config.slack.alertChannel);
+debug('Slack update channel: ' + config.slack.updateChannel);
+
 module.exports = {
 
 	event: function slackEvent(event) {
 		var service = event.service;
 		var status = event.status;
 		var payload = {
-			channel: config.updateChannel,
+			channel: config.slack.updateChannel,
 			text: '[' + service.name + ' ' + status.name + '] ' + event.message
 		};
 
@@ -31,8 +34,8 @@ module.exports = {
 		// POST to Slack webhook API.
 		if (info.alertType === 'error') {
 			var payload = {
-				channel: config.alertChannel,
-				text: info.alertType.toUpperCase() + ': ' + info.text
+				channel: config.slack.alertChannel,
+				text: info.text
 			};
 
 			// debug('Slack Request', payload);

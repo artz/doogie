@@ -6,6 +6,29 @@
 */
 angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 
+	function encodeHeaders(headers) {
+		var result = {};
+		headers.split('\n').forEach(function(header) {
+			header = header.split(':');
+			if (headers[0]) {
+				var key = header[0].trim();
+			}
+			if (key && headers[1]) {
+				var value = header[1].trim();
+				result[key] = value;
+			}
+		});
+		return result;
+	}
+
+	function decodeHeaders(headers) {
+		var result = '';
+		for (var key in headers) {
+			result += key + ':' + headers[key] + '\n';
+		}
+		return result;
+	}
+
 	var directive = {
 		scope: {},
 		templateUrl: 'templates/doogieChecks.html',
@@ -13,7 +36,12 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 			var self = this;
 
 			function refresh() {
-				self.checks = Check.query();
+				Check.query().$promise.then(function (checks) {
+					self.checks = checks.map(function (check) {
+						check.headers = decodeHeaders(check.headers);
+						return check;
+					});
+				});
 			}
 			refresh();
 
@@ -29,6 +57,7 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 			};
 
 			self.create = function (check) {
+				check.headers = encodeHeaders(check.headers);
 				new Check(check).$save().then(function () {
 					refresh();
 					self.check = {};
@@ -36,6 +65,7 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 			};
 
 			self.update = function (check) {
+				check.headers = encodeHeaders(check.headers);
 				check.$save().then(refresh);
 			};
 

@@ -18,6 +18,7 @@ module.exports = {
 	alert: function datadogAlert(alert) {
 
 		// POST to DataDog events API.
+		// http://docs.datadoghq.com/guides/logs/
 		var payload = {
 			title: alert.service.name + ' (' + alert.check.name + ')',
 			text: alert.text,

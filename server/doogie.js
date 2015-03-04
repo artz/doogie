@@ -7,6 +7,7 @@ var datadog = require('./datadog');
 var slack = require('./slack');
 var Check = mongoose.model('Check');
 var colors = require('colors');
+var ms = require('ms');
 var config = require('../config');
 
 colors.setTheme({
@@ -15,35 +16,65 @@ colors.setTheme({
 	error: 'red'
 });
 
-setInterval(runChecks, config.checkInterval * 60 * 1000); // Convert from minutes to milliseconds.
+setInterval(runChecks, ms(config.checkInterval)); // Convert from minutes to milliseconds.
 runChecks();
-
 function runChecks() {
 	Check.find({})
 		.populate('_service')
 		.exec(function (err, checks) {
 		checks.forEach(function (check) {
-			var alert = {
-				check: check,
-				service: check._service,
-				url: check.url,
-				responseStart: new Date()
-			};
-			request({
-				url: check.url,
-				timeout: 10000, // 10 second timeout
-			}, function (err, response, body) {
-				alert.response = response;
-				alert.body = body;
-				alert.responseEnd = new Date();
-				alert.responseTime = alert.responseEnd - alert.responseStart;
-				handleResults(err, alert);
-			});
+
+			var checkRetry = config.checkRetry;
+			var verified = false;
+
+			go();
+			function go() {
+
+				var alert = {
+					check: check,
+					service: check._service,
+					url: check.url,
+					responseStart: new Date()
+				};
+
+				request({
+					method: check.method,
+					url: check.url,
+					headers: check.headers,
+					timeout: ms(config.checkTimeout),
+				}, function (err, response, body) {
+
+					alert.error = err;
+					alert.response = response;
+					alert.body = body;
+					alert.responseEnd = new Date();
+					alert.responseTime = alert.responseEnd - alert.responseStart;
+
+					alert = createAlert(err, alert);
+
+					var symbol = alert.alertType === 'success' ? '✔' : '✘';
+					debug(symbol[alert.alertType] + ' ' + alert.check.method + ' ' + alert.url + (' ➜ ' +
+						(verified ? 'verified ' : '') +
+						alert.alertType)[alert.alertType] + ' ' + alert.statusCode + ' ' + alert.responseTime + 'ms');
+
+					if (alert.alertType !== 'success' && checkRetry) {
+						// debug(alert.body, alert.error);
+						verified = true;
+						checkRetry -= 1;
+						return go();
+					}
+
+					alert.verified = verified;
+					datadog.alert(alert);
+					slack.alert(alert);
+
+				});
+			}
 		});
 	});
 }
 
-function handleResults(err, alert) {
+function createAlert(err, alert) {
 
 	var check = alert.check;
 
@@ -53,18 +84,18 @@ function handleResults(err, alert) {
 	var errorResponseTime = check.errorResponseTime ? check.errorResponseTime : 6000;
 
 	var alertType = 'success';
-	var text = '';
+	var text;
 
 	// Response time check.
 	var responseTime = alert.responseTime;
 	var responseTimeStatus = 'normal';
 	if (responseTime > successResponseTime && responseTime < errorResponseTime) {
 		alertType = 'warning';
-		text += ' Elevated (+' + successResponseTime + 'ms) response time of ' + alert.responseTime + 'ms: ' + alert.check.url;
+		text = 'Elevated (+' + successResponseTime + 'ms) response time of ' + alert.responseTime + 'ms: ' + alert.check.url;
 		responseTimeStatus = 'elevated';
 	} else if (responseTime >= errorResponseTime) {
 		alertType = 'error';
-		text += ' High (+ ' + errorResponseTime + 'ms) response time of ' + alert.responseTime + 'ms: ' + alert.check.url;
+		text = 'High (+ ' + errorResponseTime + 'ms) response time of ' + alert.responseTime + 'ms: ' + alert.check.url;
 		responseTimeStatus = 'high';
 	}
 
@@ -74,15 +105,25 @@ function handleResults(err, alert) {
 	if (err) {
 		statusCode = '0';
 		alertType = 'error';
-		text += 'No response from server: ' + alert.check.url;
+		switch (err.code) {
+			case 'ETIMEDOUT':
+				text = 'Response timeout limit (' +  ms(config.checkTimeout) + 'ms) exceeded: ' + alert.check.url;
+				break;
+			case 'ENOTFOUND':
+				text = 'No response from server: ' + alert.check.url;
+				break;
+			default:
+				text = err.toString();
+		}
+
 	} else {
 		statusCode = response.statusCode.toString();
 		if (successCodeRegExp && !successCodeRegExp.test(statusCode)) {
 			alertType = 'error';
-			text += ' Unexpected response status code of ' + statusCode + ': ' + alert.check.url;
+			text = ' Unexpected response status code of ' + statusCode + ': ' + alert.check.url;
 		} else if (errorCodeRegExp && errorCodeRegExp.test(statusCode)) {
 			alertType = 'error';
-			text += ' Unexpected response status code of ' + statusCode + ': ' + alert.check.url;
+			text = ' Unexpected response status code of ' + statusCode + ': ' + alert.check.url;
 		}
 	}
 
@@ -91,9 +132,5 @@ function handleResults(err, alert) {
 	alert.statusCode = statusCode;
 	alert.responseTimeStatus = responseTimeStatus;
 
-	datadog.alert(alert);
-	slack.alert(alert);
-
-	var symbol = alert.alertType === 'success' ? '✔' : '✘';
-	debug(symbol[alert.alertType] + ' GET ' + alert.url + (' ➜ ' + alert.alertType)[alert.alertType] + ' ' + statusCode + ' ' + alert.responseTime + 'ms');
+	return alert;
 }

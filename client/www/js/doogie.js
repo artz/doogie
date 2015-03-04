@@ -16,12 +16,6 @@ angular.module('doogie', [
 		});
 }]);
 
-angular.module('doogie').controller('navController', ['$location', function ($location) {
-	this.isActive = function (viewLocation) {
-		return viewLocation === $location.path();
-	};
-}]);
-
 /* doogieEvents.js */
 
 /**
@@ -107,6 +101,29 @@ angular.module('doogie').directive('doogieBoard', function () {
 */
 angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 
+	function encodeHeaders(headers) {
+		var result = {};
+		headers.split('\n').forEach(function(header) {
+			header = header.split(':');
+			if (headers[0]) {
+				var key = header[0].trim();
+			}
+			if (key && headers[1]) {
+				var value = header[1].trim();
+				result[key] = value;
+			}
+		});
+		return result;
+	}
+
+	function decodeHeaders(headers) {
+		var result = '';
+		for (var key in headers) {
+			result += key + ':' + headers[key] + '\n';
+		}
+		return result;
+	}
+
 	var directive = {
 		scope: {},
 		templateUrl: 'templates/doogieChecks.html',
@@ -114,7 +131,12 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 			var self = this;
 
 			function refresh() {
-				self.checks = Check.query();
+				Check.query().$promise.then(function (checks) {
+					self.checks = checks.map(function (check) {
+						check.headers = decodeHeaders(check.headers);
+						return check;
+					});
+				});
 			}
 			refresh();
 
@@ -130,6 +152,7 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 			};
 
 			self.create = function (check) {
+				check.headers = encodeHeaders(check.headers);
 				new Check(check).$save().then(function () {
 					refresh();
 					self.check = {};
@@ -137,6 +160,7 @@ angular.module('doogie').directive('doogieChecks', function doogieChecks() {
 			};
 
 			self.update = function (check) {
+				check.headers = encodeHeaders(check.headers);
 				check.$save().then(refresh);
 			};
 
@@ -301,6 +325,12 @@ angular.module('doogie').directive('doogieStatuses', function doogieStatuses() {
 
 });
 
+angular.module('doogie').controller('navController', ['$location', function ($location) {
+	this.isActive = function (viewLocation) {
+		return viewLocation === $location.path();
+	};
+}]);
+
 angular.module('doogie')
 
 /**
@@ -384,7 +414,7 @@ angular.module('doogie')
 angular.module("doogie.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/admin.html","<doogie-events></doogie-events>\n<doogie-checks></doogie-checks>\n<doogie-services></doogie-services>\n<doogie-statuses></doogie-statuses>\n");
 $templateCache.put("templates/dashboard.html","<doogie-board legend=\"false\"></doogie-board>\n");
 $templateCache.put("templates/doogieBar.html","<form class=\"navbar-form navbar-left\">\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.event._service\" ng-options=\"service._id as service.name for service in self.services\"></select>\n  </div>\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.event._status\" ng-options=\"status._id as status.name for status in self.statuses\"></select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Message\" ng-model=\"self.event.message\" size=\"60\">\n  </div>\n  <div class=\"form-group\">\n  	<button type=\"submit\" class=\"btn btn-primary\" ng-click=\"self.create(self.event)\">Send</button>\n  </div>\n</form>\n");
-$templateCache.put("templates/doogieChecks.html","<h2>Checks</h2>\n\n<form class=\"form-inline\">\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.check._service\" ng-options=\"service._id as service.name for service in self.services\"></select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"self.check.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"http://www.yourcheck.com\" ng-model=\"self.check.url\">\n  </div>\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.check.method\">\n      <option value=\"GET\">GET</option>\n      <option value=\"POST\">POST</option>\n      <option value=\"PUT\">PUT</option>\n      <option value=\"DELETE\">DELETE</option>\n    </select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.successCode\" size=\"6\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.successResponseTime\" size=\"4\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.errorResponseTime\" size=\"4\">\n  </div>\n  <div class=\"form-group\">\n    <button class=\"btn btn-primary\" ng-click=\"self.create(self.check)\">Add</button>\n  </div>\n</form>\n\n<form class=\"form-inline\" ng-repeat=\"check in self.checks\">\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"check._service\" ng-options=\"service._id as service.name for service in self.services\"></select>\n  </div>\n	<div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"check.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"http://www.yourcheck.com\" ng-model=\"check.url\">\n  </div>\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"check.method\">\n      <option value=\"GET\">GET</option>\n      <option value=\"POST\">POST</option>\n      <option value=\"PUT\">PUT</option>\n      <option value=\"DELETE\">DELETE</option>\n    </select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"check.successCode\" size=\"6\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"check.successResponseTime\" size=\"4\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"check.errorResponseTime\" size=\"4\">\n  </div>\n  <div class=\"form-group\">\n	  <button class=\"btn btn-default\" ng-click=\"self.update(check)\">Save</button>\n	  <button class=\"btn btn-danger\" ng-click=\"self.delete(check)\">Delete</button>\n  </div>\n</form>\n\n");
+$templateCache.put("templates/doogieChecks.html","<h2>Checks</h2>\n\n<form class=\"form-inline\">\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.check._service\" ng-options=\"service._id as service.name for service in self.services\"></select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"self.check.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"http://www.yourcheck.com\" ng-model=\"self.check.url\">\n  </div>\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.check.method\">\n      <option value=\"GET\">GET</option>\n      <option value=\"POST\">POST</option>\n      <option value=\"PUT\">PUT</option>\n      <option value=\"DELETE\">DELETE</option>\n    </select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.successCode\" size=\"6\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.successResponseTime\" size=\"4\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.errorResponseTime\" size=\"4\">\n  </div>\n  <div class=\"form-group\">\n    <textarea type=\"text\" ng-model=\"self.check.headers\"></textarea>\n  </div>\n  <!--<div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.names[0]\" size=\"10\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.headers[self.names[0]]\" size=\"10\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.names[1]\" size=\"10\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"self.check.headers[self.names[1]]\" size=\"10\">\n  </div>-->\n  <div class=\"form-group\">\n    <button class=\"btn btn-primary\" ng-click=\"self.create(self.check)\">Add</button>\n  </div>\n</form>\n\n<form class=\"form-inline\" ng-repeat=\"check in self.checks\">\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"check._service\" ng-options=\"service._id as service.name for service in self.services\"></select>\n  </div>\n	<div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"check.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"http://www.yourcheck.com\" ng-model=\"check.url\">\n  </div>\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"check.method\">\n      <option value=\"GET\">GET</option>\n      <option value=\"POST\">POST</option>\n      <option value=\"PUT\">PUT</option>\n      <option value=\"DELETE\">DELETE</option>\n    </select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"check.successCode\" size=\"6\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"check.successResponseTime\" size=\"4\">\n    <input type=\"text\" class=\"form-control\" ng-model=\"check.errorResponseTime\" size=\"4\">\n  </div>\n  <div class=\"form-group\">\n    <textarea type=\"text\" ng-model=\"check.headers\"></textarea>\n  </div>\n  <div class=\"form-group\">\n	  <button class=\"btn btn-default\" ng-click=\"self.update(check)\">Save</button>\n	  <button class=\"btn btn-danger\" ng-click=\"self.delete(check)\">Delete</button>\n  </div>\n</form>\n\n");
 $templateCache.put("templates/doogieEvents.html","<h2>Events</h2>\n\n<form class=\"form-inline\">\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.event._service\" ng-options=\"service._id as service.name for service in self.services\"></select>\n  </div>\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"self.event._status\" ng-options=\"status._id as status.name for status in self.statuses\"></select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Message\" ng-model=\"self.event.message\" size=\"60\">\n  </div>\n  <div class=\"form-group\">\n  	<button type=\"submit\" class=\"btn btn-primary\" ng-click=\"self.create(self.event)\">Send</button>\n  </div>\n</form>\n<form class=\"form-inline\" ng-repeat=\"event in self.events\">\n	<div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"event._service\" ng-options=\"service._id as service.name for service in self.services\"></select>\n  </div>\n  <div class=\"form-group\">\n    <select class=\"form-control\" ng-model=\"event._status\" ng-options=\"status._id as status.name for status in self.statuses\"></select>\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Message\" ng-model=\"event.message\" size=\"60\">\n  </div>\n  <div class=\"form-group\">\n	  <button type=\"submit\" class=\"btn btn-default\" ng-click=\"self.update(event)\">Save</button>\n	  <button type=\"submit\" class=\"btn btn-danger\" ng-click=\"self.delete(event)\">Delete</button>\n  </div>\n</form>\n");
 $templateCache.put("templates/doogieServices.html","<h2>Services</h2>\n\n<form class=\"form-inline\">\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"self.service.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Description\" ng-model=\"self.service.description\" size=\"60\">\n  </div>\n  <div class=\"form-group\">\n    <button class=\"btn btn-primary\" ng-click=\"self.create(self.service)\">Add</button>\n  </div>\n</form>\n\n<form class=\"form-inline\" ng-repeat=\"service in self.services\">\n	<div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"service.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Description\" ng-model=\"service.description\" size=\"60\">\n  </div>\n  <div class=\"form-group\">\n	  <button class=\"btn btn-default\" ng-click=\"self.update(service)\">Save</button>\n	  <button class=\"btn btn-danger\" ng-click=\"self.delete(service)\">Delete</button>\n  </div>\n</form>\n");
 $templateCache.put("templates/doogieStatuses.html","<h2>Statuses</h2>\n\n<form class=\"form-inline\">\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"self.status.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Description\" ng-model=\"self.status.description\" size=\"52\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"0\" ng-model=\"self.status.level\" size=\"2\">\n  </div>\n  <div class=\"form-group\">\n    <button class=\"btn btn-primary\" ng-click=\"self.create(self.status)\">Add</button>\n  </div>\n</form>\n\n<form class=\"form-inline\" ng-repeat=\"status in self.statuses\">\n	<div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Name\" ng-model=\"status.name\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"Description\" ng-model=\"status.description\" size=\"52\">\n  </div>\n  <div class=\"form-group\">\n    <input type=\"text\" class=\"form-control\" placeholder=\"0\" ng-model=\"status.level\" size=\"2\">\n  </div>\n  <div class=\"form-group\">\n	  <button class=\"btn btn-default\" ng-click=\"self.update(status)\">Save</button>\n	  <button class=\"btn btn-danger\" ng-click=\"self.delete(status)\">Delete</button>\n  </div>\n</form>\n");}]);
