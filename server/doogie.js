@@ -1,5 +1,3 @@
-/* jshint node: true */
-'use strict';
 var request = require('request');
 var mongoose = require('mongoose');
 var debug = require('debug')('doogie');
@@ -8,7 +6,9 @@ var slack = require('./slack');
 var Check = mongoose.model('Check');
 var colors = require('colors');
 var ms = require('ms');
-var config = require('../config');
+var app = require('express')();
+var env = app.get('env').toLowerCase();
+var config = require('../config')[env];
 
 colors.setTheme({
 	success: 'green',

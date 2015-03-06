@@ -1,11 +1,42 @@
 {
-	"datadog": {
-		"api": "https://app.datadoghq.com/api/v1/events?api_key={{apiKey}}&application_key={{appKey}}"
+	"production": {
+		"host": "http://yourwebdomain.com",
+		"db": "mongodb://yourdbdomain.com/doogie",
+		"logFormat": "dev",
+		"datadog": {
+			"api": "https://app.datadoghq.com/api/v1/events?api_key={{apiKey}}&application_key={{appKey}}"
+		},
+		"slack": {
+			"alertChannel": "#doogie",
+			"updateChannel": "#doogie",
+			"api": "https://hooks.slack.com/services/T025DU6HX/B03P1TUHW/{{slackKey}}"
+		},
+		"twitter": {
+			"key": "{{twitterKey}}",
+			"secret": "{{twitterSecret}}"
+		},
+		"checkInterval": "1m",
+		"checkTimeout": "10s",
+		"checkRetry": 1
 	},
-	"slack": {
-		"alertChannel": "#alerts",
-		"updateChannel": "#updates",
-		"api": "https://hooks.slack.com/services/{{webHookKey}}"
-	},
-	"checkInterval": 2
+	"development": {
+		"host": "http://localhost:8081",
+		"db": "mongodb://localhost/doogie",
+		"logFormat": "dev",
+		"datadog": {
+			"api": "https://app.datadoghq.com/api/v1/events?api_key={{apiKey}}&application_key={{appKey}}"
+		},
+		"slack": {
+			"alertChannel": "#doogie",
+			"updateChannel": "#doogie",
+			"api": "https://hooks.slack.com/services/T025DU6HX/B03P1TUHW/{{slackKey}}"
+		},
+		"twitter": {
+			"key": "{{twitterKey}}",
+			"secret": "{{twitterSecret}}"
+		},
+		"checkInterval": "1m",
+		"checkTimeout": "10s",
+		"checkRetry": 1
+	}
 }

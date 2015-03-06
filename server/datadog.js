@@ -1,15 +1,14 @@
 var request = require('request');
+var debug = require('debug')('doogie');
+var app = require('express')();
+var url = require('url');
+var env = app.get('env').toLowerCase();
+var config = require('../config')[env];
 var Cache = require('node-cache');
 var sparklineCache = new Cache({
 	stdTTL: 60 * 15, // 15 minutes
 	checkperiod: 60 * 5 // 5 minutes
 });
-var debug = require('debug')('doogie');
-var app = require('express')();
-var url = require('url');
-var config = require('../config');
-
-var DATADOG_API = config.datadog.api;
 
 module.exports = {
 	alert: function datadogAlert(alert) {
@@ -37,7 +36,7 @@ module.exports = {
 
 		// debug('DataDog Request', payload);
 		request.post({
-			url: DATADOG_API,
+			url: config.datadog.api,
 			json: true,
 			body: payload
 		}, function (err, response, body) {
@@ -54,7 +53,7 @@ module.exports = {
 		}
 		var now = parseInt(Date.now() / 1000); // Convert to seconds.
 		request.get({
-			url: DATADOG_API,
+			url: config.datadog.api,
 			json: true,
 			qs: {
 				tags: ('doogie,env:' + app.get('env') + ',service_id:' + serviceId).toLowerCase(),

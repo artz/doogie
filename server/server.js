@@ -1,10 +1,8 @@
-/* jshint node: true */
-'use strict';
-
 var debug = require('debug')('doogie');
 var app = require('express')();
 var session = require('express-session');
-var config = require('../config');
+var env = app.get('env').toLowerCase();
+var config = require('../config')[env];
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -17,19 +15,17 @@ app.use(compression());
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 require('./models');
-if (app.get('env') === 'development') {
-	app.use(morgan('dev'));
-	mongoose.connect('mongodb://localhost/doogie');
-} else {
-	app.use(morgan('combined'));
-	mongoose.connect('mongodb://ec2-52-0-24-9.compute-1.amazonaws.com/doogie');
-}
+
+app.use(morgan(config.logFormat));
+mongoose.connect(config.db);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(config.twitter.secret));
 
 app.use(session({
+	resave: false,
+	saveUninitialized: false,
 	name: 'doogie',
   secret: config.twitter.secret
 }));
@@ -62,4 +58,4 @@ app.use(serveStatic('client/www', {
 require('./doogie');
 
 app.listen(8081);
-debug('Doogie server running on port 8081.');
+debug('Doogie ' + env + ' server running on port 8081.');

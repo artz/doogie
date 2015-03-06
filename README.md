@@ -9,13 +9,11 @@ Doogie is a health status service, enabling you to quickly send updates to your 
 * Check body response for pattern
 * Doogieboard auto-update
 * Usage and API documentation
-* Verify error checks, network issues
-* service slack channels
-* daily availability numbers
-* admin UI tabs
+* Detect for network issues
+* Service slack channels
+* Daily availability numbers
+* Admin UI tabs
 * Doogie slack messages
-* Twitter login/registration
-* Twitter integration
 * SMS integration?
 * Email integration?
 * Admin form validation

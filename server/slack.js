@@ -1,14 +1,8 @@
-/* jshint node: true */
-'use strict';
-
 var debug = require('debug')('doogie');
 var request = require('request');
-var config = require('../config');
-
-var SLACK_API = config.slack.api;
-
-debug('Slack alert channel: ' + config.slack.alertChannel);
-debug('Slack update channel: ' + config.slack.updateChannel);
+var app = require('express')();
+var env = app.get('env').toLowerCase();
+var config = require('../config')[env];
 
 module.exports = {
 
@@ -22,7 +16,7 @@ module.exports = {
 
 		// debug('Slack Request', payload);
 		request.post({
-			url: SLACK_API,
+			url: config.slack.api,
 			json: true,
 			body: payload
 		}, function (err, response, body) {
@@ -40,7 +34,7 @@ module.exports = {
 
 			// debug('Slack Request', payload);
 			request.post({
-				url: SLACK_API,
+				url: config.slack.api,
 				json: true,
 				body: payload
 			}, function (err, response, body) {

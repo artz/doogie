@@ -2,8 +2,9 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var User = mongoose.model('User');
-var config = require('../config');
 var app = require('express')();
+var env = app.get('env').toLowerCase();
+var config = require('../config')[env];
 var debug = require('debug')('doogie');
 
 var isNew = true;
@@ -24,7 +25,7 @@ passport.deserializeUser(function(user, done) {
 passport.use(new TwitterStrategy({
   consumerKey: config.twitter.key,
   consumerSecret: config.twitter.secret,
-  callbackURL: config.env[app.get('env')].host + '/auth/twitter/callback'
+  callbackURL: config.host + '/auth/twitter/callback'
 }, function (token, tokenSecret, profile, done) {
   debug('Running Twitter strategy.');
   User.findOne({
