@@ -19,10 +19,7 @@ require('./models');
 app.use(morgan(config.logFormat));
 mongoose.connect(config.db);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(config.twitter.secret));
-
 app.use(session({
 	resave: false,
 	saveUninitialized: false,
