@@ -25,7 +25,7 @@
 		    <!-- <ul class="nav navbar-nav">
 		      <li ng-class="{ active: nav.isActive('/') }"><a href="#/">Dashboard</a></li>
 		    </ul> -->
-		    <doogie-bar></doogie-bar>
+		    <doogie-bar ng-show="nav.user.username && nav.user.roles.indexOf('admin') !== -1"></doogie-bar>
 		    <div ng-cloak ng-show="nav.user.$resolved">
 			    <ul ng-hide="nav.user.username" class="nav navbar-nav navbar-right">
 			  		<li><a href="/auth/twitter" class="btn btn-default twitter-login"><img src="svg/twitter.svg"><b>Sign in with Twitter</b></a></li>
