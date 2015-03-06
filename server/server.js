@@ -4,7 +4,6 @@ var session = require('express-session');
 var env = app.get('env').toLowerCase();
 var config = require('../config')[env];
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 
 var cors = require('cors');
 app.use(cors());
