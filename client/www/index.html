@@ -9,6 +9,7 @@
 	<link rel="apple-touch-icon" href="apple-touch-icon.png">
 	<link rel="stylesheet" href="css/lib.min.css">
 	<link rel="stylesheet" href="css/doogie.min.css">
+	<base href="/">
 </head>
 
 <body ng-app="doogie" ng-strict-di class="container">
@@ -25,9 +26,16 @@
 		      <li ng-class="{ active: nav.isActive('/') }"><a href="#/">Dashboard</a></li>
 		    </ul> -->
 		    <doogie-bar></doogie-bar>
-		  	<ul class="nav navbar-nav navbar-right">
-		      <li ng-class="{ active: nav.isActive('/admin') }"><a href="#/admin">Admin</a></li>
-		    </ul>
+		    <div ng-cloak ng-show="nav.user.$resolved">
+			    <ul ng-hide="nav.user.username" class="nav navbar-nav navbar-right">
+			  		<li><a href="/auth/twitter" class="btn btn-default twitter-login"><img src="svg/twitter.svg"><b>Sign in with Twitter</b></a></li>
+			  		<li><a href="/auth/logout">Sign Out</a></li>
+			    </ul>
+			  	<ul ng-show="nav.user.username && nav.user.roles.indexOf('admin') !== -1" class="nav navbar-nav navbar-right">
+			      <li ng-class="{ active: nav.isActive('/admin') }"><a href="#/admin">Admin</a></li>
+			      <li><a href="/auth/logout">Sign Out</a></li>
+			    </ul>
+		    </div>
 	    </div>
 	  </div>
 	</nav>

@@ -1,6 +1,3 @@
-/* jshint node: true */
-'use strict';
-
 var request = require('request');
 var Cache = require('node-cache');
 var sparklineCache = new Cache({

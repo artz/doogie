@@ -3,6 +3,14 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 var slack = require('./slack');
 
+var userSchema = new Schema({
+	account: { type: String, required: true, index: true },
+	username: { type: String, required: true },
+	displayName: String,
+	roles: []
+});
+mongoose.model('User', userSchema);
+
 var statusSchema = new Schema({
 	name: { type: String, required: true },
 	level: { type: Number, default: 0 },

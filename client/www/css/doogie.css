@@ -419,3 +419,17 @@ body {
 
 .navbar-brand > img {
   width: 115px; }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important; }
+
+.navbar-nav > li > .twitter-login {
+  margin-top: 8px;
+  padding: 6px 12px; }
+
+.twitter-login > img {
+  width: 20px;
+  display: inline-block; }
+
+.twitter-login > b {
+  margin-left: 5px; }

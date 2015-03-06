@@ -1,0 +1,13 @@
+<h2>Users</h2>
+
+<form class="form-inline" ng-repeat="user in self.users">
+	<div class="form-group">
+    <b>{{ user.displayName }}</b> (@{{ user.username }})
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" ng-checked="user.roles.indexOf('admin') !== -1" ng-click="self.toggleAdmin(user)"> Admin</label>
+  </div>
+  <!--<div class="form-group">
+	  <button class="btn btn-danger" ng-click="self.delete(user)">Delete</button>
+  </div>-->
+</form>

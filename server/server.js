@@ -3,6 +3,10 @@
 
 var debug = require('debug')('doogie');
 var app = require('express')();
+var session = require('express-session');
+var config = require('../config');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
 var cors = require('cors');
 app.use(cors());
@@ -12,6 +16,7 @@ app.use(compression());
 
 var morgan = require('morgan');
 var mongoose = require('mongoose');
+require('./models');
 if (app.get('env') === 'development') {
 	app.use(morgan('dev'));
 	mongoose.connect('mongodb://localhost/doogie');
@@ -20,10 +25,20 @@ if (app.get('env') === 'development') {
 	mongoose.connect('mongodb://ec2-52-0-24-9.compute-1.amazonaws.com/doogie');
 }
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser(config.twitter.secret));
+
+app.use(session({
+	name: 'doogie',
+  secret: config.twitter.secret
+}));
+
+require('./auth')(app);
+
 var datadog = require('./datadog');
 app.get('/api/services/:serviceId/sparkline', datadog.sparkline);
 
-require('./models');
 var meanify = require('meanify')({
 	path: '/api',
 	pluralize: true,
@@ -31,13 +46,20 @@ var meanify = require('meanify')({
 });
 app.use(meanify());
 
-// Start Doogie health checks.
-require('./doogie');
-
 var serveStatic = require('serve-static');
 app.use(serveStatic('client/www', {
 	maxAge: '1h'
+//	index: false
 }));
+
+// Route remaining requests to index.
+// var path = require('path');
+// app.get('/*', function(req, res){
+//   res.sendFile(path.resolve(__dirname + '/../client/www/index.html'));
+// });
+
+// Start Doogie health checks.
+require('./doogie');
 
 app.listen(8081);
 debug('Doogie server running on port 8081.');
